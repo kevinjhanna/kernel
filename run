@@ -1,0 +1,3 @@
+./compila
+mcopy bin/kernel.bin h:/boot/ -o
+qemu -fda img/tpe.img
