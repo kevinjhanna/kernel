@@ -1,9 +1,11 @@
 GLOBAL  _read_msw,_lidt
 GLOBAL  _int_08_hand
+GLOBAL  _int_09_hand
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
 EXTERN  int_08
+EXTERN  int_09
 
 
 SECTION .text
@@ -67,14 +69,18 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         iret
 
 
-_int_09_hand:				; Handler de INT 8 ( Timer tick)
+_int_09_hand:				; INT 9 Handler (Keyboard)
         push    ds
         push    es                      ; Se salvan los registros
         pusha                           ; Carga de DS y ES con el valor del selector
-        mov     ax, 10h			; a utilizar.
-        mov     ds, ax
-        mov     es, ax
-        call    int_08
+
+        in eax, 64h
+        in eax, 60h
+          ; push dword eax
+;        mov     ax, 10h			; a utilizar.
+;        mov     ds, ax
+;        mov     es, ax
+        call    int_09
         mov	al,20h			; Envio de EOI generico al PIC
 	out	20h,al
 	popa
