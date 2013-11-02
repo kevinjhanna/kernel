@@ -1,5 +1,6 @@
 #include "../include/kasm.h"
 #include "../include/defs.h"
+#include "../include/keyboard_driver.h"
 
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
@@ -13,10 +14,9 @@ void int_08() {
 
 }
 
-void int_09() {
-
+void keyboard_handler(char scancode) {
     char *video = (char *) 0xb8000;
-    video[tickpos+=2]= 'x';
+    video[tickpos+=2]= scancode_to_ascii(scancode);
 }
 
 /**********************************************

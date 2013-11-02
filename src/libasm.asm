@@ -69,21 +69,24 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         iret
 
 
-_int_09_hand:				; INT 9 Handler (Keyboard)
+_keyboard_handler:			; INT 9 Handler (Keyboard)
         push    ds
         push    es                      ; Se salvan los registros
         pusha                           ; Carga de DS y ES con el valor del selector
 
-        in eax, 64h
-        in eax, 60h
-          ; push dword eax
-;        mov     ax, 10h			; a utilizar.
-;        mov     ds, ax
-;        mov     es, ax
-        call    int_09
+        in ax, 60h      ; Load scancode into ax register
+        mov dx, ax      ; We will check the most significative bit
+        and dx, 80h     ; of the scancode to see if it is a BREAK or MAKE code
+        cmp dx, 80h
+        je _keyboard_handler_end ; Exit if scancode means a key press release.
+                        ; Otherwise...
+        push ax         ; Push recently read scanscode into stack
+        call keyboard_handler
+        pop ax          ; Pop scanscode from stack
+  _keyboard_handler_end:
         mov	al,20h			; Envio de EOI generico al PIC
-	out	20h,al
-	popa
+        out	20h,al
+        popa
         pop     es
         pop     ds
         iret
