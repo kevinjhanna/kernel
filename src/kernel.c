@@ -14,9 +14,9 @@ void int_08() {
 
 }
 
-void keyboard_handler(char scancode) {
+void keyboard_handler(char ascii) {
     char *video = (char *) 0xb8000;
-    video[tickpos+=2]= scancode_to_ascii(scancode);
+    video[tickpos+=2]= ascii;
 }
 
 /**********************************************

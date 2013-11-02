@@ -80,9 +80,12 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
         cmp dx, 80h
         je _keyboard_handler_end ; Exit if scancode means a key press release.
                         ; Otherwise...
-        push ax         ; Push recently read scanscode into stack
+        push ax         ; Push recently read scancode into stack
+        call scancode_to_ascii ; Get ascii value
+        pop dx          ; Pop parameter
+        push ax         ; ascii value is now storead in EAX register.
         call keyboard_handler
-        pop ax          ; Pop scanscode from stack
+        pop ax          ; Pop ascii from stack
   _keyboard_handler_end:
         mov	al,20h			; Envio de EOI generico al PIC
         out	20h,al
