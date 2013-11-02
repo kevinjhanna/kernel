@@ -1,12 +1,12 @@
 GLOBAL  _read_msw,_lidt
 GLOBAL  _int_08_hand
-GLOBAL  _int_09_hand
+GLOBAL  _keyboard_handler
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
 EXTERN  int_08
-EXTERN  int_09
-
+EXTERN  keyboard_handler
+EXTERN  scancode_to_ascii
 
 SECTION .text
 
