@@ -74,10 +74,10 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
         push    es                      ; Se salvan los registros
         pusha                           ; Carga de DS y ES con el valor del selector
 
-        in ax, 60h      ; Load scancode into ax register
-        mov dx, ax      ; We will check the most significative bit
-        and dx, 80h     ; of the scancode to see if it is a BREAK or MAKE code
-        cmp dx, 80h
+        in al, 60h      ; Load scancode into ax register
+        mov ah, al      ; We will check the most significative bit
+        and ah, 80h     ; of the scancode to see if it is a BREAK or MAKE code
+        cmp ah, 80h
         je _keyboard_handler_end ; Exit if scancode means a key press release.
                         ; Otherwise...
         push ax         ; Push recently read scancode into stack
