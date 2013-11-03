@@ -4,6 +4,7 @@
 #include "../include/circularbuffer.h"
 #include "../include/video.h"
 #include "../include/kc.h"
+#include "../include/kernel.h"
 
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
@@ -28,11 +29,29 @@ void keyboard_handler(char ascii) {
     return;
 }
 
+
+/*
+*Sobre las primitivas: http://www.gnu.org/software/libc/manual/html_node/I_002fO-Primitives.html
+*/
+
+size_t __write(int fd, const void* buffer, size_t count)
+{
+ //deberiamos poner un switch(fd) case infoRegister: print   case shell: print      
+
+    return count;
+}
+
+size_t __read(int fd, void* buffer, size_t count)
+{
+
+    return count;
+}
+
+
 /**********************************************
 kmain()
 Punto de entrada de cóo C.
-*************************************************/
-
+************************************************/
 kmain()
 {
 
