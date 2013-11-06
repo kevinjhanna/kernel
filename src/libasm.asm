@@ -69,30 +69,33 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         iret
 
 
-_keyboard_handler:			; INT 9 Handler (Keyboard)
-        push    ds
-        push    es                      ; Se salvan los registros
-        pusha                           ; Carga de DS y ES con el valor del selector
 
-        in al, 60h      ; Load scancode into ax register
-        mov ah, al      ; We will check the most significative bit
-        and ah, 80h     ; of the scancode to see if it is a BREAK or MAKE code
-        cmp ah, 80h
-        je _keyboard_handler_end ; Exit if scancode means a key press release.
-                        ; Otherwise...
-        push ax         ; Push recently read scancode into stack
-        call scancode_to_ascii ; Get ascii value
-        pop dx          ; Pop parameter
-        push ax         ; ascii value is now storead in EAX register.
-        call keyboard_handler
-        pop ax          ; Pop ascii from stack
+_keyboard_handler:			; INT 9 Handler (Keyboard)
+    push    ds
+    push    es                      ; Se salvan los registros
+    pusha                           ; Carga de DS y ES con el valor del selector
+
+    xor ax, ax      ; Clean ax register
+    in al, 60h      ; Load scancode into al register
+    mov ah, al      ; We will check the most significative bit
+    and ah, 80h     ; of the scancode to see if it is a BREAK or MAKE code
+    cmp ah, 80h
+    je _keyboard_handler_end ; Exit if scancode means a key press release.
+                    ; Otherwise...
+    push ax         ; Push recently read scancode into stack
+    call scancode_to_ascii ; Get ascii value
+    pop dx          ; Pop parameter, we don't need its value.
+    push ax         ; Returned ascii value is now storead in EAX register.
+    call keyboard_handler
+    pop ax          ; Pop ascii from stack
   _keyboard_handler_end:
-        mov	al,20h			; Envio de EOI generico al PIC
-        out	20h,al
-        popa
-        pop     es
-        pop     ds
-        iret
+    mov	al,20h			; Envio de EOI generico al PIC
+    out	20h,al
+    popa
+    pop     es
+    pop     ds
+    iret
+
 
 
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
