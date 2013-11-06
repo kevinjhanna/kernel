@@ -2,6 +2,7 @@
 #include "../include/defs.h"
 #include "../include/keyboard_driver.h"
 #include "../include/kernel_externals.h"
+#include "../include/file_descriptors.h"
 #include "../include/video.h"
 #include "../include/kc.h"
 #include "../include/kernel.h"
@@ -33,9 +34,14 @@ void keyboard_handler(char ascii) {
 *Sobre las primitivas: http://www.gnu.org/software/libc/manual/html_node/I_002fO-Primitives.html
 */
 
-void _write(char c){
+int _write(int fd, const void* buffer, int count){
   // only temporal
-  print_on_screen(c); // to try things out
+  char* local_buffer = (char *)buffer; // cast void* to char*
+  print_on_screen(local_buffer[0]); // to try things out
+
+  // ToDo: implement count > 1
+
+  return count;
 }
 
 

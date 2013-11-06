@@ -1,6 +1,7 @@
 #include "../include/kc.h"
 #include "../include/kernel.h"
 #include "../include/kernel_externals.h"
+#include "../include/file_descriptors.h"
 #include <stdarg.h> /* lo utilizo en el printf*/
 
 /***************************************************************
@@ -28,7 +29,8 @@ char getChar()
   // ToDo: Should return int
 
   char c[1];                  // We create a local buffer with only one element.
-  while(_read(1, c, 1) == 0); // Keep on reading from kernel keyboardBuffer.
+  while(_read(STDIN, c, 1) == 0); // Keep on reading from kernel keyboardBuffer
+                              // STDIN is a dummy file descriptor
   return c[0];                // Return first and only element of local buffer.
 }
 
@@ -71,15 +73,12 @@ printf(char * fmt, ...)
 
 int putchar(int ch)
 {	/*http://en.wikibooks.org/wiki/C_Programming/C_Reference/stdio.h/putchar*/
-	return putc(ch, 1); //file descriptor del SHELL
+	return putc(ch, SHELL);
 }
 
 int putc(int ch, int fd){
-
-	// __write(fd, &ch, 1);	/*escribe en pantalla*/
-	_write(ch); //only temporal
-
-	return ch; /*el caracter escribo es retornado*/
+  _write(fd, &ch, 1);
+	return ch;
 }
 
 
