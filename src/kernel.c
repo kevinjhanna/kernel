@@ -38,6 +38,18 @@ void _write(char c){
   print_on_screen(c); // to try things out
 }
 
+
+/* Returns read count */
+int _read(int fd, void* buffer, int count){
+  if (cbIsEmpty(&keyboardBuffer))
+  {
+    return 0; // 0 elements found.
+  } else {
+    cbRead(&keyboardBuffer, buffer); // ToDo: implement iteration for count > 0
+    return 1; // should return how many elements it has read.
+  }
+}
+
 size_t __write(int fd, const void* buffer, size_t count)
 {
  //deberiamos poner un switch(fd) case infoRegister: print   case shell: print

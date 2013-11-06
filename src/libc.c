@@ -1,4 +1,6 @@
 #include "../include/kc.h"
+#include "../include/kernel.h"
+#include "../include/kernel_externals.h"
 #include <stdarg.h> /* lo utilizo en el printf*/
 
 /***************************************************************
@@ -25,10 +27,9 @@ char getChar()
   // ToDo: Should call getc(..)
   // ToDo: Should return int
 
-  char c;
-  while(cbIsEmpty(&keyboardBuffer)){}; // wait until there is a char to return.
-  cbRead(&keyboardBuffer, &c);
-  return c;
+  char c[1];                  // We create a local buffer with only one element.
+  while(_read(1, c, 1) == 0); // Keep on reading from kernel keyboardBuffer.
+  return c[0];                // Return first and only element of local buffer.
 }
 
 printf(char * fmt, ...)
