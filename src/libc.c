@@ -20,10 +20,21 @@ void k_clear_screen()
 	};*/
 }
 
+char getChar()
+{
+  // ToDo: Should call getc(..)
+  // ToDo: Should return int
+
+  char c;
+  while(cbIsEmpty(&keyboardBuffer)){}; // wait until there is a char to return.
+  cbRead(&keyboardBuffer, &c);
+  return c;
+}
+
 printf(char * fmt, ...)
 {	/*Codigo del libro de C de Kernighan, pag 172*/
 	/*mini printf con argumentos variables*/
-	
+
 	va_list ap; /* apunta a cada arg sin nombre en orden */
 
 	char *p, *sval;
@@ -64,7 +75,8 @@ int putchar(int ch)
 
 int putc(int ch, int fd){
 
-	__write(fd, &ch, 1);	/*escribe en pantalla*/
+	// __write(fd, &ch, 1);	/*escribe en pantalla*/
+	_write(ch); //only temporal
 
 	return ch; /*el caracter escribo es retornado*/
 }

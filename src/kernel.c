@@ -1,7 +1,7 @@
 #include "../include/kasm.h"
 #include "../include/defs.h"
 #include "../include/keyboard_driver.h"
-#include "../include/circularbuffer.h"
+#include "../include/kernel_externals.h"
 #include "../include/video.h"
 #include "../include/kc.h"
 #include "../include/kernel.h"
@@ -9,7 +9,7 @@
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
 
-CircularBuffer cb; // variable global
+CircularBuffer keyboardBuffer; // variable global
 
 int tickpos=640;
 
@@ -19,13 +19,12 @@ void int_08() {
 }
 
 void keyboard_handler(char ascii) {
-    if(ascii == '\b'){ // si se presiona backspáce ('\b'), se elimina un caracter del buffer del KERNEL 
-		cbRead(&cb, &ascii);
+    if(ascii == '\b'){ // si se presiona backspáce ('\b'), se elimina un caracter del buffer del KERNEL
+		cbRead(&keyboardBuffer, &ascii);
 		erase_char_on_screen();
-		return;    	
+		return;
     }
-    print_on_screen(ascii);// imprimie en pantalla y guarda en el buffer
-    cbWrite(&cb, &ascii);
+    cbWrite(&keyboardBuffer, &ascii);
     return;
 }
 
@@ -34,17 +33,33 @@ void keyboard_handler(char ascii) {
 *Sobre las primitivas: http://www.gnu.org/software/libc/manual/html_node/I_002fO-Primitives.html
 */
 
+void _write(char c){
+  // only temporal
+  print_on_screen(c); // to try things out
+}
+
 size_t __write(int fd, const void* buffer, size_t count)
 {
- //deberiamos poner un switch(fd) case infoRegister: print   case shell: print      
+ //deberiamos poner un switch(fd) case infoRegister: print   case shell: print
 
-    return count;
+  return count;
 }
 
 size_t __read(int fd, void* buffer, size_t count)
 {
 
     return count;
+}
+
+void runShell()
+{
+  char c;
+  while(1)
+  {
+    c = getChar();
+    putchar(c);
+
+  }
 }
 
 
@@ -85,11 +100,9 @@ kmain()
 	_Sti();
 
 
-	cbInit(&cb); //inicializo buffer del KERNEL
+	cbInit(&keyboardBuffer); //inicializo buffer del KERNEL
 
-        while(1)
-        {
-        }
+  runShell();
 
 }
 
