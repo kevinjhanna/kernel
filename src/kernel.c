@@ -56,19 +56,6 @@ int _read(int fd, void* buffer, int count){
   }
 }
 
-size_t __write(int fd, const void* buffer, size_t count)
-{
- //deberiamos poner un switch(fd) case infoRegister: print   case shell: print
-
-  return count;
-}
-
-size_t __read(int fd, void* buffer, size_t count)
-{
-
-    return count;
-}
-
 void runShell()
 {
   char c;
