@@ -10,7 +10,7 @@
 * Borra la pantalla en modo texto color.
 ****************************************************************/
 
-void k_clear_screen() 
+void k_clear_screen()
 {
 	/*char *vidmem = (char *) 0xb8000;
 	unsigned int i=0;
@@ -23,16 +23,21 @@ void k_clear_screen()
 	};*/
 }
 
-char getChar()
+char getc(int fd)
 {
-  // ToDo: Should call getc(..)
   // ToDo: Should return int
 
-  char c[1];                  // We create a local buffer with only one element.
-  while(_read(STDIN, c, 1) == 0); // Keep on reading from kernel keyboardBuffer
-                              // STDIN is a dummy file descriptor
-  return c[0];                // Return first and only element of local buffer.
+  char c;
+  while(_read(fd, &c, 1) == 0); // Keep on reading from kernel keyboardBuffer
+                                // until we have read 1 value.
+  return c;
 }
+
+char getChar()
+{
+  getc(STDIN);
+}
+
 
 printf(char * fmt, ...)
 {	/*Codigo del libro de C de Kernighan, pag 172*/
@@ -88,7 +93,7 @@ int putc(int ch, int fd){
 *
 *Recibe: Puntero a elemento de la IDT
 *	 Selector a cargar en el descriptor de interrupcion
-*	 Puntero a rutina de atencion de interrupcion	
+*	 Puntero a rutina de atencion de interrupcion
 *	 Derechos de acceso del segmento
 *	 Cero
 ****************************************************************/
