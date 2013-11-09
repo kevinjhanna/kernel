@@ -37,7 +37,7 @@ void keyboard_handler(char ascii) {
 int _write(int fd, const void* buffer, int count){
   // only temporal
   char* local_buffer = (char *)buffer; // cast void* to char*
-  print_on_screen(local_buffer[0]); // to try things out
+  video_write(DEBUG, local_buffer[0]); // to try things out
 
   // ToDo: implement count > 1
 
@@ -63,7 +63,6 @@ void runShell()
   {
     c = getChar();
     putchar(c);
-
   }
 }
 
@@ -107,6 +106,7 @@ kmain()
 
 	cbInit(&keyboardBuffer); //inicializo buffer del KERNEL
 
+  initialize_video();
   runShell();
 
 }

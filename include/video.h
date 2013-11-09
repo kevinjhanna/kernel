@@ -7,4 +7,12 @@ void erase_char_on_screen();
 
 int has_char_on_screen();
 
+#pragma pack (1) 		/* Alinear las siguiente estructuras a 1 byte */
+
+/* Screen Segment descriptor  */
+typedef struct {
+  char* start_position;
+  int offset;
+} ScreenSegment;
+
 #endif
