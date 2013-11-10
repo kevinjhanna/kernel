@@ -4,7 +4,6 @@ GLOBAL  _keyboard_handler
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
-EXTERN  int_08
 EXTERN  keyboard_handler
 EXTERN  scancode_to_ascii
 
@@ -60,7 +59,6 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         mov     ax, 10h			; a utilizar.
         mov     ds, ax
         mov     es, ax
-        call    int_08
         mov	al,20h			; Envio de EOI generico al PIC
 	out	20h,al
 	popa
