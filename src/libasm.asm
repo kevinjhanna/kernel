@@ -4,7 +4,7 @@ GLOBAL  _keyboard_handler
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
-EXTERN  keyboard_handler
+EXTERN  keyboard_key_press_handler
 EXTERN  scancode_to_ascii
 
 SECTION .text
@@ -27,7 +27,7 @@ _mascaraPIC1:			; Escribe mascara del PIC 1
         pop     ebp
         retn
 
-_mascaraPIC2:			; Escribe mascara del PIC 2
+_mascaraPIC2:		; Escribe mascara del PIC 2
 	push    ebp
         mov     ebp, esp
         mov     ax, [ss:ebp+8]  ; ax = mascara de 16 bits
@@ -67,26 +67,35 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         iret
 
 
-
+; ***************************************************************************
 _keyboard_handler:			; INT 9 Handler (Keyboard)
     push    ds
-    push    es                      ; Se salvan los registros
-    pusha                           ; Carga de DS y ES con el valor del selector
+    push    es      ; Se salvan los registros
+    pusha           ; Carga de DS y ES con el valor del selector
 
     xor ax, ax      ; Clean ax register
     in al, 60h      ; Load scancode into al register
     mov ah, al      ; We will check the most significative bit
     and ah, 80h     ; of the scancode to see if it is a BREAK or MAKE code
     cmp ah, 80h
-    je _keyboard_handler_end ; Exit if scancode means a key press release.
-                    ; Otherwise...
+
+    je _kb_hand_break; Jump if scancode means a key press release (BREAK CODE)
+
+  _kb_hand_make:    ; Otherwise... Handle key press.
     push ax         ; Push recently read scancode into stack
     call scancode_to_ascii ; Get ascii value
     pop dx          ; Pop parameter, we don't need its value.
     push ax         ; Returned ascii value is now storead in EAX register.
-    call keyboard_handler
+    call keyboard_key_press_handler
     pop ax          ; Pop ascii from stack
-  _keyboard_handler_end:
+    jmp _kb_hand_end
+
+
+  _kb_hand_break:   ; Handle key release
+    xor ax, ax
+
+
+  _kb_hand_end:
     mov	al,20h			; Envio de EOI generico al PIC
     out	20h,al
     popa
@@ -94,6 +103,7 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
     pop     ds
     iret
 
+; ***************************************************************************
 
 
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0

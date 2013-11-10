@@ -14,13 +14,44 @@ CircularBuffer keyboardBuffer; // variable global
 
 int tickpos=640;
 
-void keyboard_handler(char ascii) {
-    // if(ascii == '\b'){ // si se presiona backspáce ('\b'), se elimina un caracter del buffer del KERNEL
-		// cbRead(&keyboardBuffer, &ascii);
-		// erase_char_on_screen();
-		// return;
-    // }
-    cbWrite(&keyboardBuffer, &ascii);
+int show_register = 0;
+
+void press_ctrl()
+{
+  show_register = 1;
+}
+
+void release_ctrl()
+{
+  show_register = 0;
+}
+
+void keyboard_handler(char scancode) {
+}
+
+void keyboard_key_press_handler(char ascii) {
+    if (ascii == 'r' && show_register)
+    {
+      show_register = 0;
+      char ch = 'x';
+
+      cbWrite(&keyboardBuffer, &ch);
+
+    } else {
+      if (ascii == 'a')
+      {
+        show_register = 1;
+      }
+      else
+      {
+      // if(ascii == '\b'){ // si se presiona backspáce ('\b'), se elimina un caracter del buffer del KERNEL
+      // cbRead(&keyboardBuffer, &ascii);
+      // erase_char_on_screen();
+      // return;
+      // }
+      cbWrite(&keyboardBuffer, &ascii);
+      }
+    }
 }
 
 
