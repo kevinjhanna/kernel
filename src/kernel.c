@@ -37,7 +37,7 @@ void keyboard_handler(char ascii) {
 int _write(int fd, const void* buffer, int count){
   // only temporal
   char* local_buffer = (char *)buffer; // cast void* to char*
-  video_write(DEBUG, local_buffer[0]); // to try things out
+  video_write(fd, local_buffer[0]); // to try things out
 
   // ToDo: implement count > 1
 

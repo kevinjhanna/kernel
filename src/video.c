@@ -7,9 +7,25 @@ int pos = 0;
 
 ScreenSegment screen_segment_table[10];
 
+
+/*
+ * Text screen video memory is located at 0xb8000
+ * The first 10 lines should be the debug screen
+ * and the 15 remaining lines for the shell.
+ *
+ * To calculate the shell screen starting position:
+ * Each character on screen takes up two bytes.
+ * And each line consits of 80 characters.
+ * So, each line should use 160 bytes.
+ * We multiply 10d * 160d, and the result we
+ * add it to the real starting position.
+ * (of course, taking the precautions to use
+ * the correct units).
+ *
+ */
 void initialize_video() {
   screen_segment_table[DEBUG].start_position = (char *) 0xb8000;
-  screen_segment_table[SHELL].start_position = (char *) 0xb8000;
+  screen_segment_table[SHELL].start_position = (char *) 0xb8640;
 }
 
 /*
