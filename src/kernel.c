@@ -14,55 +14,33 @@ CircularBuffer keyboardBuffer; // variable global
 
 int tickpos=640;
 
-int show_register = false;
-
-void press_ctrl()
-{
-  show_register = true;
-}
-
-void release_ctrl()
-{
-  show_register = false;
-}
-
-void new_ascii(char ascii)
-{
-    if (ascii == 'r' && show_register)
-    {
-      char ch = 'x';
-
-      cbWrite(&keyboardBuffer, &ch);
-
-    } else {
-      // if(ascii == '\b'){ // si se presiona backspáce ('\b'), se elimina un caracter del buffer del KERNEL
-      // cbRead(&keyboardBuffer, &ascii);
-      // erase_char_on_screen();
-      // return;
-      // }
-      cbWrite(&keyboardBuffer, &ascii);
-    }
-}
+int ctrl_pressed = false;
 
 void key_press(byte scancode)
 {
   if (scancode == 0x1d) // TODO: implement with a switch, check other ctrl values.
   {
-    press_ctrl();
+    ctrl_pressed = true;
   }
   else
   {
     char ascii = scancode_to_ascii(scancode);
-    new_ascii(ascii);
+    if (ascii == 'r' && ctrl_pressed)
+    {
+      // Show register info
+      putc('x', DEBUG); // only temporary
+    } else {
+      // write onto keyboard buffer
+      cbWrite(&keyboardBuffer, &ascii);
+    }
   }
 }
 
 void key_release(byte scancode)
 {
-
   if (scancode == 0x9d) // TODO: implement with a switch, check other ctrl values.
   {
-    release_ctrl();
+    ctrl_pressed = false;
   }
 }
 
