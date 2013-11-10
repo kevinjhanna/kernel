@@ -14,19 +14,13 @@ CircularBuffer keyboardBuffer; // variable global
 
 int tickpos=640;
 
-void int_08() {
-    // char *video = (char *) 0xb8000;
-    // video[tickpos+=2]='O';
-}
-
 void keyboard_handler(char ascii) {
-    if(ascii == '\b'){ // si se presiona backspáce ('\b'), se elimina un caracter del buffer del KERNEL
-		cbRead(&keyboardBuffer, &ascii);
-		erase_char_on_screen();
-		return;
-    }
+    // if(ascii == '\b'){ // si se presiona backspáce ('\b'), se elimina un caracter del buffer del KERNEL
+		// cbRead(&keyboardBuffer, &ascii);
+		// erase_char_on_screen();
+		// return;
+    // }
     cbWrite(&keyboardBuffer, &ascii);
-    return;
 }
 
 
@@ -35,7 +29,6 @@ void keyboard_handler(char ascii) {
 */
 
 int _write(int fd, const void* buffer, int count){
-  // only temporal
   char* local_buffer = (char *)buffer; // cast void* to char*
   video_write(fd, local_buffer[0]); // to try things out
 
