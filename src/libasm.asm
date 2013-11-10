@@ -4,7 +4,7 @@ GLOBAL  _keyboard_handler
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 
-EXTERN  keyboard_key_press_handler
+EXTERN  keyboard_handler
 EXTERN  scancode_to_ascii
 
 SECTION .text
@@ -75,27 +75,10 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
 
     xor ax, ax      ; Clean ax register
     in al, 60h      ; Load scancode into al register
-    mov ah, al      ; We will check the most significative bit
-    and ah, 80h     ; of the scancode to see if it is a BREAK or MAKE code
-    cmp ah, 80h
-
-    je _kb_hand_break; Jump if scancode means a key press release (BREAK CODE)
-
-  _kb_hand_make:    ; Otherwise... Handle key press.
     push ax         ; Push recently read scancode into stack
-    call scancode_to_ascii ; Get ascii value
-    pop dx          ; Pop parameter, we don't need its value.
-    push ax         ; Returned ascii value is now storead in EAX register.
-    call keyboard_key_press_handler
+    call keyboard_handler
     pop ax          ; Pop ascii from stack
-    jmp _kb_hand_end
 
-
-  _kb_hand_break:   ; Handle key release
-    xor ax, ax
-
-
-  _kb_hand_end:
     mov	al,20h			; Envio de EOI generico al PIC
     out	20h,al
     popa

@@ -1,10 +1,13 @@
 /***************************************************
   Defs.h
-	
+
 ****************************************************/
 
 #ifndef _defs_
 #define _defs_
+
+#define true 1
+#define false 0
 
 #define byte unsigned char
 #define word short int
@@ -53,7 +56,7 @@ typedef struct {
   dword base;
 } IDTR;
 
-     
+
 
 #endif
 

@@ -14,44 +14,80 @@ CircularBuffer keyboardBuffer; // variable global
 
 int tickpos=640;
 
-int show_register = 0;
+int show_register = false;
 
 void press_ctrl()
 {
-  show_register = 1;
+  show_register = true;
 }
 
 void release_ctrl()
 {
-  show_register = 0;
+  show_register = false;
 }
 
-void keyboard_handler(char scancode) {
-}
-
-void keyboard_key_press_handler(char ascii) {
+void new_ascii(char ascii)
+{
     if (ascii == 'r' && show_register)
     {
-      show_register = 0;
       char ch = 'x';
 
       cbWrite(&keyboardBuffer, &ch);
 
     } else {
-      if (ascii == 'a')
-      {
-        show_register = 1;
-      }
-      else
-      {
       // if(ascii == '\b'){ // si se presiona backspáce ('\b'), se elimina un caracter del buffer del KERNEL
       // cbRead(&keyboardBuffer, &ascii);
       // erase_char_on_screen();
       // return;
       // }
       cbWrite(&keyboardBuffer, &ascii);
-      }
     }
+}
+
+void key_press(byte scancode)
+{
+  if (scancode == 0x1d) // TODO: implement with a switch, check other ctrl values.
+  {
+    press_ctrl();
+  }
+  else
+  {
+    char ascii = scancode_to_ascii(scancode);
+    new_ascii(ascii);
+  }
+}
+
+void key_release(byte scancode)
+{
+
+  if (scancode == 0x9d) // TODO: implement with a switch, check other ctrl values.
+  {
+    release_ctrl();
+  }
+}
+
+/*
+ * keyboard_handler function is called with each keyboard interruption.
+ * Its parameter is the scancode sent by the keyboard.
+ *
+ * This function divides key press and key release flow.
+ *
+ * Implemented by the keyboard driver.
+ */
+
+void keyboard_handler(byte scancode) {
+  // First we check the most significative bit
+  // of the scancode to see if it is a BREAK or MAKE code
+
+  if ((scancode & 0x80) == 0x80) {
+    // key release (BREAK CODE)
+    key_release(scancode);
+  }
+  else
+  {
+    // key press (MAKE CODE)
+    key_press(scancode);
+  }
 }
 
 
