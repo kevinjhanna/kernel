@@ -5,6 +5,7 @@
 #include <stdarg.h> /* lo utilizo en el printf*/
 
 #include "../include/stdio.h"
+#include "../include/string.h"
 
 /***************************************************************
 *k_clear_screen
@@ -75,19 +76,11 @@ itoa(int num, unsigned char* str, int base)
         return 0;
 }
 
-int strcmp (const char * s1, const char * s2)
-{
-    for(; *s1 == *s2; ++s1, ++s2)
-        if(*s1 == '\0')
-            return 0;
-    return *s1 < *s2 ? -1 : 1;
-}
 
-
-void printfString(char* str){
+void printfString(char* str, int stream){
 	do
 	{
-		putchar(*str);
+		putc(*str, stream);
 		str++;
 	}while(*str != '\0');
 }
@@ -108,46 +101,73 @@ char getChar()
 }
 
 
-void
-printf(char * fmt, ...)
-{	/*Codigo del libro de C de Kernighan, pag 172*/
-	/*mini printf con argumentos variables*/
+int strcmp (const char * s1, const char * s2)
+{
+    for(; *s1 == *s2; ++s1, ++s2)
+        if(*s1 == '\0')
+            return 0;
+    return *s1 < *s2 ? -1 : 1;
+}
+
+int fprintf(int stream, const char *fmt, ...){
 
 	va_list ap; /* apunta a cada arg sin nombre en orden */
+	va_start(ap,fmt); /*hace que ap apunte al 1er. arg sin nombre*/
+	
+	vfprintf(stream, &fmt, ap);	
 
+	va_end(ap); /*limpia cuando todo esta hecho*/
+
+	return 0;
+}
+int vfprintf(int stream, char *fmt,va_list ap)
+{
+/*Codigo del libro de C de Kernighan, pag 172*/
+/*mini printf con argumentos variables*/
 	char *p, *sval;
 	int ival, hval;
 	char cval;
 
-	va_start(ap,fmt); /*hace que ap apunte al 1er. arg sin nombre*/
-	for(p = fmt; *p; p++){
+		for(p = fmt; *p; p++){
 		if( *p != '%'){
-			putchar(*p);
+			putc(*p,stream);
 			continue;
 		}
 		switch(*++p){
 			case 'd':
 				ival = va_arg(ap,int);
 				itoa(ival, aBuffer, 10);
-				printfString(aBuffer);
+				printfString(aBuffer, stream);
 				break;
 			case 'c':
 				cval = (char) va_arg(ap, int);
-				putchar(cval);
+				putc(cval, stream);
 				break;
 			case 's':
 				for(sval = va_arg(ap, char *); *sval; sval++)
-					putchar(*sval);
+					putc(*sval, stream);
 				break;
 			case 'h':
 				 hval = va_arg(ap,int);
-				 itoa(hval,aBuffer,16);
-				 printfString(aBuffer);
+				 itoa(hval,aBuffer,16);		
+				 printfString(aBuffer, stream);
 			default:
-				putchar(*p);
+				putc(*p, stream);
 				break;
 		}
 	}
+
+	return 0;
+}
+
+void printf(char * fmt, ...)
+{	
+
+	va_list ap; /* apunta a cada arg sin nombre en orden */
+	va_start(ap,fmt); /*hace que ap apunte al 1er. arg sin nombre*/
+	
+	vfprintf(SHELL, fmt, ap);
+	
 	va_end(ap); /*limpia cuando todo esta hecho*/
 }
 
@@ -161,12 +181,13 @@ int putc(int ch, int fd){
 	return ch;
 }
 
+
 void readCommand(char * cmd)
 {
 	int aCommand = 0;
 	int index = 0;
 	int isCommand = -1;
-
+	
 	for(; isCommand != 0 && index < sizeof(commands); index++){
 		isCommand = strcmp(commands[index], cmd);
 	}
@@ -185,7 +206,7 @@ void readCommand(char * cmd)
 		default:
 			printf("command is not valid");
 			break;
-	}
+	}		
 }
 
 
