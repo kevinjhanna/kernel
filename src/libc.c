@@ -12,6 +12,7 @@
 * Borra la pantalla en modo texto color.
 ****************************************************************/
 unsigned char aBuffer[32];
+char * commands[3] ={"openCD", "closeCD", "infoCD"};
 
 void k_clear_screen()
 {
@@ -38,12 +39,11 @@ itoa(int num, unsigned char* str, int base)
         unsigned char* p2;
 
         p1 = str;
-//        if (len == 0)
-//                return -1;
 
-        if(sum == 0){
-        	str[i++] = '0';
-        	return 0;
+        if(sum < 0){
+        	str[i++] = '-';
+        	p1 = str + 1;
+       		sum = -sum;
         }
 
         do
@@ -75,6 +75,40 @@ itoa(int num, unsigned char* str, int base)
         return 0;
 }
 
+int strcmp (const char * s1, const char * s2)
+{
+    for(; *s1 == *s2; ++s1, ++s2)
+        if(*s1 == '\0')
+            return 0;
+    return *s1 < *s2 ? -1 : 1;
+}
+
+void readCommand(char * cmd)
+{
+	int aCommand = 0;
+	int index = 0;
+	int isCommand = -1;
+	
+	for(; isCommand != 0 && index < sizeof(commands); index++){
+		isCommand = strcmp(commands[index], cmd);
+	}
+
+	index--;
+	switch(index){
+		case 0:
+			printf("commands: %s", cmd);
+			break;
+		case 1:
+			printf("commands: %s", cmd);
+			break;
+		case 2:
+			printf("commands: %s", cmd);
+			break;
+		default:
+			printf("command is not valid");
+			break;
+	}
+
 void printfString(char* str){
 	do
 	{
@@ -99,6 +133,7 @@ char getChar()
 }
 
 
+void 
 printf(char * fmt, ...)
 {	/*Codigo del libro de C de Kernighan, pag 172*/
 	/*mini printf con argumentos variables*/
