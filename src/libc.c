@@ -83,31 +83,6 @@ int strcmp (const char * s1, const char * s2)
     return *s1 < *s2 ? -1 : 1;
 }
 
-void readCommand(char * cmd)
-{
-	int aCommand = 0;
-	int index = 0;
-	int isCommand = -1;
-	
-	for(; isCommand != 0 && index < sizeof(commands); index++){
-		isCommand = strcmp(commands[index], cmd);
-	}
-
-	index--;
-	switch(index){
-		case 0:
-			printf("commands: %s", cmd);
-			break;
-		case 1:
-			printf("commands: %s", cmd);
-			break;
-		case 2:
-			printf("commands: %s", cmd);
-			break;
-		default:
-			printf("command is not valid");
-			break;
-	}
 
 void printfString(char* str){
 	do
@@ -133,7 +108,7 @@ char getChar()
 }
 
 
-void 
+void
 printf(char * fmt, ...)
 {	/*Codigo del libro de C de Kernighan, pag 172*/
 	/*mini printf con argumentos variables*/
@@ -166,7 +141,7 @@ printf(char * fmt, ...)
 				break;
 			case 'h':
 				 hval = va_arg(ap,int);
-				 itoa(hval,aBuffer,16);		
+				 itoa(hval,aBuffer,16);
 				 printfString(aBuffer);
 			default:
 				putchar(*p);
@@ -184,6 +159,33 @@ int putchar(int ch)
 int putc(int ch, int fd){
   _write(fd, &ch, 1);
 	return ch;
+}
+
+void readCommand(char * cmd)
+{
+	int aCommand = 0;
+	int index = 0;
+	int isCommand = -1;
+
+	for(; isCommand != 0 && index < sizeof(commands); index++){
+		isCommand = strcmp(commands[index], cmd);
+	}
+
+	index--;
+	switch(index){
+		case 0:
+			printf("commands: %s", cmd);
+			break;
+		case 1:
+			printf("commands: %s", cmd);
+			break;
+		case 2:
+			printf("commands: %s", cmd);
+			break;
+		default:
+			printf("command is not valid");
+			break;
+	}
 }
 
 
