@@ -4,11 +4,14 @@
 #include "../include/file_descriptors.h"
 #include <stdarg.h> /* lo utilizo en el printf*/
 
+#include "../include/stdio.h"
+
 /***************************************************************
 *k_clear_screen
 *
 * Borra la pantalla en modo texto color.
 ****************************************************************/
+unsigned char aBuffer[32];
 
 void k_clear_screen()
 {
@@ -21,6 +24,63 @@ void k_clear_screen()
 		vidmem[i]=WHITE_TXT;
 		i++;
 	};*/
+}
+
+//https://android.googlesource.com/kernel/lk/+/qcom-dima-8x74-fixes/lib/libc/itoa.c
+int
+itoa(int num, unsigned char* str, int base)
+{
+        int sum = num;
+        int i = 0;
+        int digit;
+        unsigned char temp;
+        unsigned char* p1;
+        unsigned char* p2;
+
+        p1 = str;
+//        if (len == 0)
+//                return -1;
+
+        if(sum == 0){
+        	str[i++] = '0';
+        	return 0;
+        }
+
+        do
+        {
+                digit = sum % base;
+
+                if (digit < 0xA)
+                        str[i++] = '0' + digit;
+                else
+                        str[i++] = 'A' + digit - 0xA;
+
+                sum /= base;
+
+        }while (sum);
+
+        str[i] = '\0';
+
+        p2 = str + i - 1;//position of the last number in the buffer
+        
+        //this DO WHILE puts in the correct order the given number.
+        do
+        {
+        	temp = *p1;
+        	*p1 = *p2;
+        	*p2 = temp;
+        	p1++;
+        	p2--;
+        }while(i >= 0 && p2 > p1); 
+        return 0;
+}
+
+void printfString(char* str){
+	do
+	{
+		putchar(*str);
+		str++;
+	}while(*str != '\0');
 }
 
 char getc(int fd)
@@ -46,7 +106,7 @@ printf(char * fmt, ...)
 	va_list ap; /* apunta a cada arg sin nombre en orden */
 
 	char *p, *sval;
-	int ival;
+	int ival, hval;
 	char cval;
 
 	va_start(ap,fmt); /*hace que ap apunte al 1er. arg sin nombre*/
@@ -58,7 +118,8 @@ printf(char * fmt, ...)
 		switch(*++p){
 			case 'd':
 				ival = va_arg(ap,int);
-				/*printINT();*/
+				itoa(ival, aBuffer, 10);
+				printfString(aBuffer);
 				break;
 			case 'c':
 				cval = (char) va_arg(ap, int);
@@ -68,6 +129,10 @@ printf(char * fmt, ...)
 				for(sval = va_arg(ap, char *); *sval; sval++)
 					putchar(*sval);
 				break;
+			case 'h':
+				 hval = va_arg(ap,int);
+				 itoa(hval,aBuffer,16);		
+				 printfString(aBuffer);
 			default:
 				putchar(*p);
 				break;
