@@ -16,6 +16,15 @@ int tickpos=640;
 
 int ctrl_pressed = false;
 
+int eax_value, ebx_value, ecx_value, edx_value;
+// int ebp_value, esp_value;
+// int cs, ds, ss, es, fs, gs, idtr, flags;
+
+void info_register()
+{
+  printf("EAX: %h | EBX: %h | ECX: %h | EDX: %h", eax_value, ebx_value, ecx_value, edx_value);
+}
+
 void key_press(byte scancode)
 {
   if (scancode == 0x1d) // TODO: implement with a switch, check other ctrl values.
@@ -29,6 +38,7 @@ void key_press(byte scancode)
     {
       // Show register info
       putc('x', DEBUG); // only temporary
+      info_register();
     } else {
       // write onto keyboard buffer
       cbWrite(&keyboardBuffer, &ascii);

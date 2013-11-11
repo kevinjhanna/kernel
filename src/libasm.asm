@@ -7,6 +7,11 @@ GLOBAL  _debug
 EXTERN  keyboard_handler
 EXTERN  scancode_to_ascii
 
+EXTERN  eax_value
+EXTERN  ebx_value
+EXTERN  ecx_value
+EXTERN  edx_value
+
 SECTION .text
 
 
@@ -73,14 +78,23 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
     push    es      ; Se salvan los registros
     pusha           ; Carga de DS y ES con el valor del selector
 
+    ; Save registers in case we need to show them later
+    mov [eax_value], eax
+    mov [ebx_value], ebx
+    mov [ecx_value], ecx
+    mov [ecx_value], edx
+
+    ; Read and process scancode
     xor ax, ax      ; Clean ax register
     in al, 60h      ; Load scancode into al register
     push ax         ; Push recently read scancode into stack
     call keyboard_handler
-    pop ax          ; Pop ascii from stack
 
+    ; End
+    pop ax          ; Pop ascii from stack
     mov	al,20h			; Envio de EOI generico al PIC
     out	20h,al
+
     popa
     pop     es
     pop     ds
