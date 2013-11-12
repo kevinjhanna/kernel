@@ -29,7 +29,8 @@ unsigned int ebp_value, esp_value;
 
 
 /*
- * Function provided by kernel
+ * Function provided by kernel that prints on DEBUG screen
+ * the stored register values.
  *
  */
 
@@ -74,7 +75,6 @@ void key_release(byte scancode)
  *
  * This function divides key press and key release flow.
  *
- * Implemented by the keyboard driver.
  */
 
 void keyboard_handler(byte scancode) {
@@ -102,7 +102,7 @@ void _write_new_line(int fd) {
 }
 
 int _write(int fd, const void* buffer, int count){
-  char* local_buffer = (char *)buffer; // cast void* to char*
+  char* local_buffer = (char *)buffer;
   video_write(fd, local_buffer[0]); // to try things out
 
   // ToDo: implement count > 1
