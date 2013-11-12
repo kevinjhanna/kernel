@@ -13,7 +13,6 @@
 * Borra la pantalla en modo texto color.
 ****************************************************************/
 unsigned char aBuffer[32];
-char * commands[3] ={"openCD", "closeCD", "infoCD"};
 
 void k_clear_screen()
 {
@@ -150,14 +149,6 @@ char getChar()
   getc(STDIN);
 }
 
-
-int strcmp (const char * s1, const char * s2)
-{
-    for(; *s1 == *s2; ++s1, ++s2)
-        if(*s1 == '\0')
-            return 0;
-    return *s1 < *s2 ? -1 : 1;
-}
 
 int fprintf(int stream, const char *fmt, ...){
 
@@ -321,15 +312,15 @@ void scanfchar(char* pchar)
 {
   char ch;
   int i=1;
-  
+
   ch=getChar();
   putchar(ch);
-  
+
   while(!isSpace(ch))
   {
     pchar[i]=ch;
     i++;
-    ch=getChar();	
+    ch=getChar();
     putchar(ch);
   }
 
@@ -389,32 +380,6 @@ int scanf(const char *fmt, ...)
 
 
 
-void readCommand(char * cmd)
-{
-	int aCommand = 0;
-	int index = 0;
-	int isCommand = -1;
-
-	for(; isCommand != 0 && index < sizeof(commands); index++){
-		isCommand = strcmp(commands[index], cmd);
-	}
-
-	index--;
-	switch(index){
-		case 0:
-			printf("commands: %s", cmd);
-			break;
-		case 1:
-			printf("commands: %s", cmd);
-			break;
-		case 2:
-			printf("commands: %s", cmd);
-			break;
-		default:
-			printf("command is not valid");
-			break;
-	}
-}
 
 
 /***************************************************************

@@ -6,6 +6,7 @@
 #include "../include/video.h"
 #include "../include/kc.h"
 #include "../include/kernel.h"
+#include "../include/shell.h"
 
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
@@ -122,16 +123,6 @@ int _read(int fd, void* buffer, int count){
   }
 }
 
-void runShell()
-{
-  char c;
-  while(1)
-  {
-    c = getChar();
-    putchar(c);
-  }
-}
-
 
 /**********************************************
 kmain()
@@ -173,7 +164,6 @@ kmain()
 	cbInit(&keyboardBuffer); //inicializo buffer del KERNEL
 
   initialize_video();
-  runShell();
-
+  run_shell();
 }
 
