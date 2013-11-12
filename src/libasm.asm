@@ -1,7 +1,7 @@
 GLOBAL  _read_msw,_lidt
 GLOBAL  _int_08_hand
 GLOBAL  _keyboard_handler
-GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
+GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti, set_cursor
 GLOBAL  _debug
 
 EXTERN  keyboard_handler
@@ -75,6 +75,40 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         iret
 
 
+; Based on http://www.brokenthorn.com/Resources/OSDev10.html
+set_cursor:
+  push    ebp
+  mov     ebp, esp
+  push    ebx
+  mov     ebx, [ss: ebp + 8]
+
+  mov al, 0x0f    ; Cursor location low byte index
+  mov dx, 0x03D4    ; Write it to the CRT index register
+  out dx, al
+
+  mov al, bl      ; The current location is in EBX. BL contains the low byte, BH high byte
+  mov dx, 0x03D5    ; Write it to the data register
+  out dx, al      ; low byte`
+
+  xor eax, eax
+
+  mov al, 0x0e    ; Cursor location high byte index
+  mov dx, 0x03D4    ; Write to the CRT index register
+  out dx, al
+
+  mov al, bh      ; the current location is in EBX. BL contains low byte, BH high byte
+  mov dx, 0x03D5    ; Write it to the data register
+  out dx, al      ; high byte
+
+  pop     ebx
+  pop     ebp
+  retn
+
+
+
+
+
+
 ; ***************************************************************************
 _keyboard_handler:			; INT 9 Handler (Keyboard)
     push    ds
@@ -89,7 +123,6 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
 
     mov [ebp_value], ebp
     mov [esp_value], esp
-
 
     ; Read and process scancode
     xor ax, ax      ; Clean ax register

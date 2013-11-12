@@ -63,18 +63,32 @@ void clean_screen_segment(int fd)
 void video_set(int fd, int char_offset, int line_offset, char value){
   ScreenSegment ss = screen_segment_table[fd];
 
-  int position = line_offset * ss.char_offset_limit + char_offset;
-  position *= ss.bytes_per_char;
+  int logic_position = line_offset * ss.char_offset_limit + char_offset;
+  int byte_position = logic_position * ss.bytes_per_char;
 
-	ss.start_position[position] = value;
-	ss.start_position[position + 1] = WHITE_TXT;
+	ss.start_position[byte_position] = value;
+	ss.start_position[byte_position + 1] = WHITE_TXT;
+
 }
 
-void video_write_new_line(int fd)
+void video_move_type_cursor(int fd)
+{
+  ScreenSegment* ss = &screen_segment_table[fd];
+  // TODO: move this magic number to a constant
+  set_cursor((10 + ss->line_offset) * ss->char_offset_limit + ss->char_offset);
+}
+
+void _video_new_line(int fd)
 {
   screen_segment_table[fd].line_offset++;
   screen_segment_table[fd].char_offset = 0;
   // TODO Check if we are off limits!!
+}
+
+void video_write_new_line(int fd)
+{
+  _video_new_line(fd);
+  video_move_type_cursor(fd);
 }
 
 void video_write(int fd, char ascii){
@@ -88,8 +102,10 @@ void video_write(int fd, char ascii){
 
   if (ss->char_offset == ss->char_offset_limit)
   {
-    video_write_new_line(fd);
+    _video_new_line(fd);
   }
+
+  video_move_type_cursor(fd);
 }
 
 // deprecated.
