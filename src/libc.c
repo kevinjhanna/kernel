@@ -245,6 +245,142 @@ int putc(int ch, int fd){
 }
 
 
+int isNumber(char ascii)
+{
+	return ascii >= '0' && ascii <= '9';
+}
+
+int isHexa(char ascii)
+{
+	return (ascii>='a' && ascii<='d') || (ascii>='A' && ascii<='D') || isNumber(ascii);
+}
+
+int isSpace(char ch)
+{
+	return ch == ' ' || ch == '\n' || ch == '\t';
+}
+
+void scanfDecimal(int *pint)
+{
+  char ch;
+  int decimal;
+
+  ch = getChar();
+  putchar(ch);
+  while(!isSpace(ch) && isNumber(ch)){
+    decimal = ch-'0';
+    (*pint)= (*pint)*10+decimal;
+    ch = getChar();
+    putchar(ch);
+  }
+}
+
+int hexToDecimal(char ch)
+{
+	int rta;
+	switch(ch){
+			case 'a': case 'b': case 'c': case 'd': case 'e': case 'f': 
+				rta=(ch-'a'+10);
+				break;
+			case 'A': case 'B': case 'C': case 'D': case 'E': case 'F': 
+				rta=(ch-'A'+10);
+				break;
+			default: 
+				rta=(ch-'0');
+				break;
+	}
+
+	return rta;
+}
+
+void scanfhexa(int *pint)
+{
+	int hex;
+	char ch;
+
+	ch = getChar();
+	putchar(ch);
+	while(!isSpace(ch) && isHexa(ch))
+	{
+		hex = hexToDecimal(ch);
+		*pint = (*pint)*16 + hex;
+		ch = getChar();
+		putchar(ch);
+	}
+}
+
+void scanfchar(char* pchar)
+{
+  char ch;
+  int i=1;
+  
+  ch=getChar();
+  putchar(ch);
+  
+  while(!isSpace(ch))
+  {
+    pchar[i]=ch;
+    i++;
+    ch=getChar();	
+    putchar(ch);
+  }
+
+  pchar[i]='\0';
+}
+
+int scanf(const char *fmt, ...)
+{
+		va_list ap;
+		int i=0;
+		int cant = 0;
+		char ch;
+		int* pint;
+		char* pchar;
+
+		va_start(ap,fmt);
+
+		while(fmt[i] != 0)
+		{
+ 			ch = getChar();
+			putchar(ch);
+	
+			if(fmt[i] == '%'){
+				i++;
+				switch(fmt[i])
+				 {
+				    case 'd':  
+						pint=va_arg(ap, int *);
+						if(isNumber(ch)){
+							(*pint)=ch-'0';
+							scanfDecimal(pint);
+						}					
+						i++;
+						cant++;
+						break;
+				    case 's':
+						pchar=va_arg(ap,char *);
+						scanfchar(pchar);
+						i++;
+						cant++;
+						break;
+					case 'x':
+						pint=va_arg(ap, int *);
+						if(isHexa(ch)){
+							*pint = hexToDecimal(ch);
+							scanfhexa(pint);
+						}
+						i++;
+						cant++;
+						break;					 						
+				  }	
+			}
+		}
+		va_end(ap);
+		return i;
+}
+
+
+
 void readCommand(char * cmd)
 {
 	int aCommand = 0;
