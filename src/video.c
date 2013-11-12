@@ -70,6 +70,13 @@ void video_set(int fd, int char_offset, int line_offset, char value){
 	ss.start_position[position + 1] = WHITE_TXT;
 }
 
+void video_write_new_line(int fd)
+{
+  screen_segment_table[fd].line_offset++;
+  screen_segment_table[fd].char_offset = 0;
+  // TODO Check if we are off limits!!
+}
+
 void video_write(int fd, char ascii){
   ScreenSegment* ss = &screen_segment_table[fd];
   video_set(fd, ss->char_offset, ss->line_offset, ascii);
@@ -81,16 +88,8 @@ void video_write(int fd, char ascii){
 
   if (ss->char_offset == ss->char_offset_limit)
   {
-    ss->char_offset = 0;
-    ss->line_offset++;
+    video_write_new_line(fd);
   }
-}
-
-void video_write_new_line(int fd)
-{
-  screen_segment_table[fd].line_offset++;
-  screen_segment_table[fd].char_offset = 0;
-  // TODO Check if we are off limits!!
 }
 
 // deprecated.
