@@ -35,7 +35,7 @@ void initialize_commands()
   commands[2].function = &test_hello_world;
 }
 
-boolean read_and_execute_command(char * cmd)
+boolean run_command(char * cmd)
 {
 
   int found_command = false;
@@ -54,6 +54,21 @@ boolean read_and_execute_command(char * cmd)
   return found_command;
 }
 
+void shell_run_command(char * buffer, int* pos)
+{
+
+  if (*pos > 0)
+  {
+    buffer[*pos] = '\0';
+    if (!run_command(buffer))
+    {
+      printf("Command not found \n");
+    }
+
+    *pos = 0;
+  }
+}
+
 void run_shell()
 {
 
@@ -70,13 +85,7 @@ void run_shell()
 
     if (c == '\n')
     {
-      shell_buffer[shell_buffer_pos++] = '\0';
-      if (!read_and_execute_command(shell_buffer))
-      {
-        printf("Command not found \n");
-      }
-
-      shell_buffer_pos = 0;
+      shell_run_command(shell_buffer, &shell_buffer_pos);
     }
     else
     {
