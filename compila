@@ -6,7 +6,8 @@ gcc -c ../src/kernel.c -o kernel.o -fno-builtin
 gcc -c ../src/libc.c  -o libc.o -fno-builtin
 gcc -c ../src/keyboard_driver.c  -o keyboard_driver.o -fno-builtin
 gcc -c ../src/video.c  -o video.o -fno-builtin
+gcc -c ../src/shell.c  -o shell.o -fno-builtin
 gcc -c ../src/circularbuffer.c  -o circularbuffer.o -fno-builtin
 
 
-ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o libc.o libasm.o keyboard_driver.o video.o circularbuffer.o
+ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o libc.o libasm.o keyboard_driver.o video.o circularbuffer.o shell.o
