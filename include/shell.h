@@ -8,10 +8,10 @@
 
 void run_shell();
 
- typedef struct {
-   char* name;
-   void (*function)();
- } Command;
+typedef struct {
+  char* name;
+  void (*function)();
+} Command;
 
 #endif
 
