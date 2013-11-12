@@ -29,51 +29,101 @@ void k_clear_screen()
 }
 
 //https://android.googlesource.com/kernel/lk/+/qcom-dima-8x74-fixes/lib/libc/itoa.c
-int
-itoa(int num, unsigned char* str, int base)
+int itoa(int sum, unsigned char* str, int base)
 {
-        int sum = num;
-        int i = 0;
-        int digit;
-        unsigned char temp;
-        unsigned char* p1;
-        unsigned char* p2;
 
-        p1 = str;
+  int i = 0;
+  int digit;
+  unsigned char temp;
+  unsigned char* p1;
+  unsigned char* p2;
 
-        if(sum < 0){
-        	str[i++] = '-';
-        	p1 = str + 1;
-       		sum = -sum;
-        }
+  p1 = str;
 
-        do
-        {
-                digit = sum % base;
+  if(sum < 0){
+    str[i++] = '-';
+    p1 = str + 1;
+    sum = -sum;
+  }
 
-                if (digit < 0xA)
-                        str[i++] = '0' + digit;
-                else
-                        str[i++] = 'A' + digit - 0xA;
+  do
+  {
+    digit = sum % base;
 
-                sum /= base;
+    if (digit < 0xA)
+      str[i++] = '0' + digit;
+    else
+      str[i++] = 'A' + digit - 0xA;
 
-        }while (sum);
+    sum /= base;
 
-        str[i] = '\0';
+  } while (sum);
 
-        p2 = str + i - 1;//position of the last number in the buffer
-        
-        //this DO WHILE puts in the correct order the given number.
-        do
-        {
-        	temp = *p1;
-        	*p1 = *p2;
-        	*p2 = temp;
-        	p1++;
-        	p2--;
-        }while(i >= 0 && p2 > p1); 
-        return 0;
+  str[i] = '\0';
+
+  p2 = str + i - 1; // Position of the last number in the buffer
+
+  // Now we put in the correct order the given number.
+  do
+  {
+    temp = *p1;
+    *p1 = *p2;
+    *p2 = temp;
+    p1++;
+    p2--;
+  } while(i >= 0 && p2 > p1);
+
+  return 0;
+}
+
+// TODO this is just copypaste from atoi but with unsigned int
+// variables. Should try to refactor this to be DRY
+
+unsigned int strtoul(unsigned int sum, unsigned char* str, int base)
+{
+
+  int i = 0;
+  int digit;
+  unsigned char temp;
+  unsigned char* p1;
+  unsigned char* p2;
+
+  p1 = str;
+
+  if(sum < 0){
+    str[i++] = '-';
+    p1 = str + 1;
+    sum = -sum;
+  }
+
+  do
+  {
+    digit = sum % base;
+
+    if (digit < 0xA)
+      str[i++] = '0' + digit;
+    else
+      str[i++] = 'A' + digit - 0xA;
+
+    sum /= base;
+
+  } while (sum);
+
+  str[i] = '\0';
+
+  p2 = str + i - 1; // Position of the last number in the buffer
+
+  // Now we put in the correct order the given number.
+  do
+  {
+    temp = *p1;
+    *p1 = *p2;
+    *p2 = temp;
+    p1++;
+    p2--;
+  } while(i >= 0 && p2 > p1);
+
+  return 0;
 }
 
 
@@ -113,17 +163,30 @@ int fprintf(int stream, const char *fmt, ...){
 
 	va_list ap; /* apunta a cada arg sin nombre en orden */
 	va_start(ap,fmt); /*hace que ap apunte al 1er. arg sin nombre*/
-	
-	vfprintf(stream, &fmt, ap);	
+
+	vfprintf(stream, &fmt, ap);
 
 	va_end(ap); /*limpia cuando todo esta hecho*/
 
 	return 0;
 }
+
+
+/*
+ * Basic vfprintf with variable arguments
+ * function based on Kernighan's C book, page 172.
+ *
+ * Format rules:
+ *
+ * %s for strings.
+ * %d for decimals.
+ * %c for chars.
+ * %h for hexadecimal (unsigned).
+ *
+ */
 int vfprintf(int stream, char *fmt,va_list ap)
 {
-/*Codigo del libro de C de Kernighan, pag 172*/
-/*mini printf con argumentos variables*/
+
 	char *p, *sval;
 	int ival, hval;
 	char cval;
@@ -148,8 +211,8 @@ int vfprintf(int stream, char *fmt,va_list ap)
 					putc(*sval, stream);
 				break;
 			case 'h':
-				 hval = va_arg(ap,int);
-				 itoa(hval,aBuffer,16);		
+				 hval = va_arg(ap, unsigned int);
+				 strtoul(hval, aBuffer, 16);
 				 printfString(aBuffer, stream);
 			default:
 				putc(*p, stream);
@@ -161,13 +224,13 @@ int vfprintf(int stream, char *fmt,va_list ap)
 }
 
 void printf(char * fmt, ...)
-{	
+{
 
 	va_list ap; /* apunta a cada arg sin nombre en orden */
 	va_start(ap,fmt); /*hace que ap apunte al 1er. arg sin nombre*/
-	
+
 	vfprintf(SHELL, fmt, ap);
-	
+
 	va_end(ap); /*limpia cuando todo esta hecho*/
 }
 
@@ -187,7 +250,7 @@ void readCommand(char * cmd)
 	int aCommand = 0;
 	int index = 0;
 	int isCommand = -1;
-	
+
 	for(; isCommand != 0 && index < sizeof(commands); index++){
 		isCommand = strcmp(commands[index], cmd);
 	}
@@ -206,7 +269,7 @@ void readCommand(char * cmd)
 		default:
 			printf("command is not valid");
 			break;
-	}		
+	}
 }
 
 

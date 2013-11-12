@@ -14,10 +14,17 @@ CircularBuffer keyboardBuffer; // variable global
 
 int tickpos=640;
 
+/*
+ * Indicates wether ctrl key is pressed or not TODO: move to keyboard
+ */
 int ctrl_pressed = false;
 
-int eax_value, ebx_value, ecx_value, edx_value;
-// int ebp_value, esp_value;
+
+/*
+ * Register values stored with each key press.
+ */
+unsigned int eax_value, ebx_value, ecx_value, edx_value;
+unsigned int ebp_value, esp_value;
 // int cs, ds, ss, es, fs, gs, idtr, flags;
 
 
@@ -25,9 +32,9 @@ int eax_value, ebx_value, ecx_value, edx_value;
  * Function provided by kernel
  *
  */
+
 void info_register()
 {
-
   restart_screen_segment_offset(DEBUG);
   vfprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h", eax_value, ebx_value, ecx_value, edx_value);
 }

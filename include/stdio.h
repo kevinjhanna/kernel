@@ -3,6 +3,7 @@
 
 void printfString(char* str, int stream);
 int itoa(int num, unsigned char* str, int base);
+unsigned int strtoul(unsigned int num, unsigned char* str, int base);
 char getc(int fd);
 char getChar();
 int putchar(int ch);
