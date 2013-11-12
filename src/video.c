@@ -88,12 +88,9 @@ void video_write(int fd, char ascii){
 
 void video_write_new_line(int fd)
 {
-
-  // video_set(fd, screen_segment_table[fd].char_offset, ascii);
-  /*
-   * We increment two positions since each character
-   * on screen takes two bytes.
-   */
+  screen_segment_table[fd].line_offset++;
+  screen_segment_table[fd].char_offset = 0;
+  // TODO Check if we are off limits!!
 }
 
 // deprecated.

@@ -240,8 +240,16 @@ int putchar(int ch)
 }
 
 int putc(int ch, int fd){
-  _write(fd, &ch, 1);
-	return ch;
+  if (ch == '\n')
+  {
+    _write_new_line(fd);
+    return 0;
+  }
+  else
+  {
+    _write(fd, &ch, 1);
+    return ch;
+  }
 }
 
 

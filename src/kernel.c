@@ -35,10 +35,9 @@ unsigned int ebp_value, esp_value;
 
 void info_register()
 {
-  char c ='\n';
   restart_screen_segment_offsets(DEBUG);
   vfprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
-  putc(c);
+  vfprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
 }
 
 void key_press(byte scancode)
