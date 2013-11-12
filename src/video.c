@@ -28,6 +28,19 @@ void initialize_video() {
   screen_segment_table[SHELL].start_position = (char *) 0xb8640;
 }
 
+
+void restart_screen_segment_offset(int fd)
+{
+  screen_segment_table[fd].offset = 0;
+}
+
+/*
+ *  Cleans a screen segment and starts offset from 0
+ */
+void clean_screen_segment(int fd)
+{
+}
+
 /*
  * Set a white character on given File Descriptor, on given
  * offset.

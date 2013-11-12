@@ -20,9 +20,16 @@ int eax_value, ebx_value, ecx_value, edx_value;
 // int ebp_value, esp_value;
 // int cs, ds, ss, es, fs, gs, idtr, flags;
 
+
+/*
+ * Function provided by kernel
+ *
+ */
 void info_register()
 {
-  printf("EAX: %h | EBX: %h | ECX: %h | EDX: %h", eax_value, ebx_value, ecx_value, edx_value);
+
+  restart_screen_segment_offset(DEBUG);
+  vfprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h", eax_value, ebx_value, ecx_value, edx_value);
 }
 
 void key_press(byte scancode)
@@ -37,7 +44,6 @@ void key_press(byte scancode)
     if (ascii == 'r' && ctrl_pressed)
     {
       // Show register info
-      putc('x', DEBUG); // only temporary
       info_register();
     } else {
       // write onto keyboard buffer
