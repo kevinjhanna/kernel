@@ -12,6 +12,9 @@ EXTERN  ebx_value
 EXTERN  ecx_value
 EXTERN  edx_value
 
+EXTERN  ebp_value
+EXTERN  esp_value
+
 SECTION .text
 
 
@@ -83,6 +86,10 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
     mov [ebx_value], ebx
     mov [ecx_value], ecx
     mov [ecx_value], edx
+
+    mov [ebp_value], ebp
+    mov [esp_value], esp
+
 
     ; Read and process scancode
     xor ax, ax      ; Clean ax register
