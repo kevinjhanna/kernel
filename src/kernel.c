@@ -35,8 +35,10 @@ unsigned int ebp_value, esp_value;
 
 void info_register()
 {
-  restart_screen_segment_offset(DEBUG);
-  vfprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h", eax_value, ebx_value, ecx_value, edx_value);
+  char c ='\n';
+  restart_screen_segment_offsets(DEBUG);
+  vfprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
+  putc(c);
 }
 
 void key_press(byte scancode)
@@ -95,6 +97,10 @@ void keyboard_handler(byte scancode) {
 /*
 *Sobre las primitivas: http://www.gnu.org/software/libc/manual/html_node/I_002fO-Primitives.html
 */
+
+void _write_new_line(int fd) {
+  video_write_new_line(fd);
+}
 
 int _write(int fd, const void* buffer, int count){
   char* local_buffer = (char *)buffer; // cast void* to char*

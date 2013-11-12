@@ -7,6 +7,7 @@ int pos = 0;
 
 ScreenSegment screen_segment_table[10];
 
+// ***************************************************************************
 
 /*
  * Text screen video memory is located at 0xb8000
@@ -23,16 +24,28 @@ ScreenSegment screen_segment_table[10];
  * the correct units).
  *
  */
-void initialize_video() {
-  screen_segment_table[DEBUG].start_position = (char *) 0xb8000;
-  screen_segment_table[SHELL].start_position = (char *) 0xb8640;
-}
 
-
-void restart_screen_segment_offset(int fd)
+void restart_screen_segment_offsets(int fd)
 {
-  screen_segment_table[fd].offset = 0;
+  screen_segment_table[fd].char_offset = 0;
+  screen_segment_table[fd].line_offset = 0;
 }
+
+void initialize_screen_segment(int fd, int start_position, int end_position)
+{
+  screen_segment_table[fd].start_position = (char *) start_position;
+  screen_segment_table[fd].char_offset_limit = 80;
+  screen_segment_table[fd].bytes_per_char = 2;
+  restart_screen_segment_offsets(fd);
+}
+
+void initialize_video() {
+  initialize_screen_segment(DEBUG, 0xb8000, 0xfffff);
+  initialize_screen_segment(SHELL, 0xb8640, 0xfffff);
+}
+
+// ***************************************************************************
+
 
 /*
  *  Cleans a screen segment and starts offset from 0
@@ -47,18 +60,40 @@ void clean_screen_segment(int fd)
  * (Only for File Descriptors associated with a screen segment).
  *
  */
-void video_set(int fd, int offset, char value){
-	screen_segment_table[fd].start_position[offset] = value;
-	screen_segment_table[fd].start_position[offset + 1] = WHITE_TXT;
+void video_set(int fd, int char_offset, int line_offset, char value){
+  ScreenSegment ss = screen_segment_table[fd];
+
+  int position = line_offset * ss.char_offset_limit + char_offset;
+  position *= ss.bytes_per_char;
+
+	ss.start_position[position] = value;
+	ss.start_position[position + 1] = WHITE_TXT;
 }
 
 void video_write(int fd, char ascii){
-  video_set(fd, screen_segment_table[fd].offset, ascii);
+  ScreenSegment* ss = &screen_segment_table[fd];
+  video_set(fd, ss->char_offset, ss->line_offset, ascii);
+  /*
+   * We increment one positions since we only
+   * count logic characters, not bytes on screen.
+   */
+  ss->char_offset++;
+
+  if (ss->char_offset == ss->char_offset_limit)
+  {
+    ss->char_offset = 0;
+    ss->line_offset++;
+  }
+}
+
+void video_write_new_line(int fd)
+{
+
+  // video_set(fd, screen_segment_table[fd].char_offset, ascii);
   /*
    * We increment two positions since each character
    * on screen takes two bytes.
    */
-  screen_segment_table[fd].offset += 2;
 }
 
 // deprecated.
