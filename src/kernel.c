@@ -24,9 +24,13 @@ int ctrl_pressed = false;
 /*
  * Register values stored with each key press.
  */
-unsigned int eax_value, ebx_value, ecx_value, edx_value;
-unsigned int ebp_value, esp_value;
-// int cs, ds, ss, es, fs, gs, idtr, flags;
+// at least 32 bits.
+unsigned long int eax_value, ebx_value, ecx_value, edx_value;
+unsigned long int ebp_value, esp_value;
+
+// at least 16 bits.
+unsigned int cs_value, ds_value, ss_value, es_value, fs_value, gs_value;
+int idtr_value, flags_value;
 
 
 /*
@@ -39,7 +43,11 @@ void info_register()
 {
   restart_screen_segment_offsets(DEBUG);
   vfprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
-  vfprintf(DEBUG, "EBP: %h | ESP: %h  \n", ebp_value, esp_value);
+  vfprintf(DEBUG, "EBP: %h | ESP: %h \n", ebp_value, esp_value);
+  vfprintf(DEBUG, "CS: %h | DS: %h | ", cs_value, ds_value);
+  vfprintf(DEBUG, "SS: %h | ES: %h \n", ss_value, es_value);
+  vfprintf(DEBUG, "GS: %h \n", gs_value);
+  vfprintf(DEBUG, "FLAGS: %h | IDTR %h \n", flags_value, idtr_value);
 }
 
 void key_press(byte scancode)
