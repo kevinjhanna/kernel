@@ -3,6 +3,7 @@ GLOBAL  _int_08_hand
 GLOBAL  _keyboard_handler
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti, set_cursor
 GLOBAL  _debug
+
 GLOBAL _openCD, _closeCD, _infoCD
 
 EXTERN  keyboard_handler
@@ -15,15 +16,6 @@ EXTERN  edx_value
 
 EXTERN  ebp_value
 EXTERN  esp_value
-
-EXTERN  cs_value
-EXTERN  ds_value
-EXTERN  ss_value
-EXTERN  es_value
-EXTERN  gs_value
-
-EXTERN  idtr_value
-EXTERN  flags_value
 
 SECTION .text
 
@@ -63,7 +55,6 @@ _lidt:				; Carga el IDTR
         mov     ebp, esp
         push    ebx
         mov     ebx, [ss: ebp + 6] ; ds:bx = puntero a IDTR
-        mov [idtr_value], ebx
 	rol	ebx,16
 	lidt    [ds: ebx]          ; carga IDTR
         pop     ebx
@@ -135,20 +126,8 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
     mov [ebp_value], ebp
     mov [esp_value], esp
 
-    mov [cs_value], cs
-    mov [ds_value], ds
-    mov [ss_value], ss
-    mov [es_value], es
-    mov [gs_value], gs
-
-    push    ebp
-    mov     ebp, esp
-    pushf                  ; save flags
-    mov eax, [ss: ebp + 4]
-    mov [flags_value], eax
-
     ; Read and process scancode
-    xor eax, eax    ; Clean eax register
+    xor ax, ax      ; Clean ax register
     in al, 60h      ; Load scancode into al register
     push ax         ; Push recently read scancode into stack
     call keyboard_handler
@@ -157,9 +136,6 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
     pop ax          ; Pop ascii from stack
     mov	al,20h			; Envio de EOI generico al PIC
     out	20h,al
-
-    popf
-    pop ebp
 
     popa
     pop     es
@@ -184,7 +160,13 @@ vuelve:	mov     ax, 1
 	pop     bp
         retn
 
-;*****************************************************************************
+doNothing:
+    mov ebx, 65000
+loop3:
+    dec ebx
+    cmp ebx, 0
+    jne loop3
+
 isBSY:
     MOV DX, 1f7h
 LOOP1:
@@ -204,6 +186,30 @@ LOOP2:
     JE LOOP2
     ret
 
+_identify:
+    mov dx, 0x1f6
+    mov al, 00h
+    out dx, al  
+
+    mov dx, 0x1f2
+    mov al, 00h
+    out dx, al
+
+    mov dx, 0x1f3
+    mov al, 00h
+    out dx, al
+
+    mov dx, 0x1f4
+    mov al, 00h
+    out dx, al
+
+    mov dx, 0x1f5
+    mov al, 00h
+    out dx, al
+
+    mov dx, 0x1f7
+    mov al, 0xEC
+    out dx, al
 _openCD:
 
      call isBSY
@@ -405,4 +411,3 @@ _infoCD:
 SECTION .bss
 
 buffer resb 8
-
