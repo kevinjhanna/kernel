@@ -17,6 +17,12 @@ int strcmp (const char * s1, const char * s2)
   return *s1 < *s2 ? -1 : 1;
 }
 
+void clear()
+{
+  clean_screen_segment(SHELL);
+  restart_screen_segment_offsets(SHELL);
+}
+
 void test_hello_world()
 {
   printf("Hello, world!");
@@ -32,10 +38,25 @@ void closeCD()
   _closeCD();
 }
 
-void infoCD()
+void test_numbers()
 {
-  printf("Hello, world!");
+  int i, j, t;
+  for (t = 0; t < 1000; t++)
+  {
+    for (i = 0; i < 5; i++)
+    {
+      for (j = 0; j < 40; j++)
+      {
+        printf("%d", j);
+      }
+      printf("\n");
+    }
+    clear();
+  }
+>>>>>>> Add a test
 }
+
+
 
 
 void initialize_commands()
@@ -48,6 +69,15 @@ void initialize_commands()
 
   commands[2].name = "infocd";
   commands[2].function = &infoCD;
+
+  commands[3].name = "clear";
+  commands[3].function = &clear;
+
+  commands[4].name = "test helloworld";
+  commands[4].function = &test_hello_world;
+
+  commands[5].name = "test numbers";
+  commands[5].function = &test_numbers;
 }
 
 boolean run_command(char * cmd)
