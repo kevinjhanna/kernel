@@ -31,28 +31,21 @@ void restart_screen_segment_offsets(int fd)
   screen_segment_table[fd].line_offset = 0;
 }
 
-void initialize_screen_segment(int fd, int start_position, int end_position)
+void initialize_screen_segment(int fd, int start_position, int lines_limit)
 {
   screen_segment_table[fd].start_position = (char *) start_position;
+  screen_segment_table[fd].line_offset_limit = lines_limit;
   screen_segment_table[fd].char_offset_limit = 80;
   screen_segment_table[fd].bytes_per_char = 2;
   restart_screen_segment_offsets(fd);
 }
 
 void initialize_video() {
-  initialize_screen_segment(DEBUG, 0xb8000, 0xfffff);
-  initialize_screen_segment(SHELL, 0xb8640, 0xfffff);
+  initialize_screen_segment(DEBUG, 0xb8000, 10);
+  initialize_screen_segment(SHELL, 0xb8640, 15);
 }
 
 // ***************************************************************************
-
-
-/*
- *  Cleans a screen segment and starts offset from 0
- */
-void clean_screen_segment(int fd)
-{
-}
 
 /*
  * Set a white character on given File Descriptor, on given
@@ -108,15 +101,21 @@ void video_write(int fd, char ascii){
   video_move_type_cursor(fd);
 }
 
-// deprecated.
-void erase_char_on_screen(){
-	if(has_char_on_screen()){
-		pos -= 2;
-		video[pos] = ' ';
-	}
-}
 
-// deprecated.
-int has_char_on_screen(){
-	return pos > 0;
+/*
+ *  Cleans a screen segment and starts offset from 0
+ */
+void clean_screen_segment(int fd)
+{
+  ScreenSegment ss = screen_segment_table[fd];
+
+  int line;
+  int char_pos;
+  for (line = 0; line < ss.line_offset_limit; line++)
+  {
+    for (char_pos = 0; char_pos < ss.char_offset_limit; char_pos++)
+    {
+      video_set(fd, char_pos, line, ' ');
+    }
+  }
 }

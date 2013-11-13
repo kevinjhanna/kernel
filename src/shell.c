@@ -1,4 +1,5 @@
 #include "../include/defs.h"
+#include "../include/file_descriptors.h"
 #include "../include/shell.h"
 
 #define MAX_COMMANDS 3
@@ -77,6 +78,8 @@ void run_shell()
   char c;
 
   initialize_commands();
+  clean_screen_segment(DEBUG);
+  clean_screen_segment(SHELL);
 
   while(true)
   {
