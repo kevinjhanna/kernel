@@ -2,7 +2,7 @@
 #include "../include/file_descriptors.h"
 #include "../include/shell.h"
 
-#define MAX_COMMANDS 3
+#define MAX_COMMANDS 5
 
 Command commands[MAX_COMMANDS];
 
@@ -23,6 +23,12 @@ void test_hello_world()
   printf("Hello, world!");
 }
 
+void clear()
+{
+  clean_screen_segment(SHELL);
+  restart_screen_segment_offsets(SHELL);
+}
+
 
 void initialize_commands()
 {
@@ -34,6 +40,12 @@ void initialize_commands()
 
   commands[2].name = "infocd";
   commands[2].function = &test_hello_world;
+
+  commands[3].name = "clear";
+  commands[3].function = &clear;
+
+  commands[4].name = "test helloworld";
+  commands[4].function = &test_hello_world;
 }
 
 boolean run_command(char * cmd)
@@ -42,7 +54,7 @@ boolean run_command(char * cmd)
   int found_command = false;
   int i = 0;
 
-  for(i = 0; i < 3 && !found_command; i++)
+  for(i = 0; i < MAX_COMMANDS && !found_command; i++)
   {
 
     if (strcmp(commands[i].name, cmd) == 0)
