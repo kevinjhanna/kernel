@@ -1,7 +1,8 @@
 #include "../include/defs.h"
+#include "../include/file_descriptors.h"
 #include "../include/shell.h"
 
-#define MAX_COMMANDS 3
+#define MAX_COMMANDS 10
 
 Command commands[MAX_COMMANDS];
 
@@ -38,6 +39,11 @@ void closeCD()
   _closeCD();
 }
 
+void infoCD()
+{
+  _infoCD();
+}
+
 void test_numbers()
 {
   int i, j, t;
@@ -53,11 +59,7 @@ void test_numbers()
     }
     clear();
   }
->>>>>>> Add a test
 }
-
-
-
 
 void initialize_commands()
 {
