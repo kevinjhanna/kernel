@@ -31,17 +31,17 @@ void test_hello_world()
 
 void openCD()
 {
- _openCD();
+ // _openCD();
 }
 
 void closeCD()
 {
-  _closeCD();
+  // _closeCD();
 }
 
 void infoCD()
 {
-  _infoCD();
+  // _infoCD();
 }
 
 void test_numbers()
@@ -64,10 +64,10 @@ void test_numbers()
 void initialize_commands()
 {
   commands[0].name = "opencd";
-  commands[0].function = &openCD;
+  commands[0].function = &test_hello_world;
 
   commands[1].name = "closecd";
-  commands[1].function = &closeCD;
+  commands[1].function = &test_hello_world;
 
   commands[2].name = "infocd";
   commands[2].function = &infoCD;
@@ -88,7 +88,7 @@ boolean run_command(char * cmd)
   int found_command = false;
   int i = 0;
 
-  for(i = 0; i < 3 && !found_command; i++)
+  for(i = 0; i < MAX_COMMANDS && !found_command; i++)
   {
 
     if (strcmp(commands[i].name, cmd) == 0)
@@ -124,6 +124,8 @@ void run_shell()
   char c;
 
   initialize_commands();
+  clean_screen_segment(DEBUG);
+  clean_screen_segment(SHELL);
 
   while(true)
   {
