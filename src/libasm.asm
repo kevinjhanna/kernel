@@ -3,6 +3,7 @@ GLOBAL  _int_08_hand
 GLOBAL  _keyboard_handler
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti, set_cursor
 GLOBAL  _debug
+GLOBAL _openCD, _closeCD, _infoCD
 
 EXTERN  keyboard_handler
 EXTERN  scancode_to_ascii
@@ -182,3 +183,226 @@ vuelve:	mov     ax, 1
 	pop	ax
 	pop     bp
         retn
+
+;*****************************************************************************
+isBSY:
+    MOV DX, 1f7h
+LOOP1:
+    IN AL, DX
+    AND AL, 0x80
+    JNE LOOP1
+    ret
+
+isDRDY:
+    ret
+
+isDRQ:
+    MOV DX, 1f7h
+LOOP2:
+    IN AL, DX
+    AND AL,0x08
+    JE LOOP2
+    ret
+
+_openCD:
+
+     call isBSY
+
+    mov dx, 0x1f6
+    mov al, 10h
+    out dx, al 
+
+    mov dx, 0x1f1
+    mov al, 0
+    out dx, al 
+
+    mov dx, 3f6h
+    mov al, 00001010b ;nIEN is the second bit from the right 
+    out dx, al; nIEN is now one
+
+    mov dx, 0x1f7
+    mov al, 0xA0 ;ATAPI COMMAND
+    out dx, al 
+
+    call doNothing
+
+    call isBSY
+
+    call isDRQ
+
+    mov dx, 0x1f0
+    mov ax, 0x1E
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    call isBSY
+
+    call isDRDY
+
+    mov dx, 0x1f7
+    mov al, 0xA0
+    out dx, al
+
+    call isBSY
+
+    call isDRQ
+
+    mov dx, 0x1f0
+    mov ax, 1Bh
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 2
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    call isBSY
+
+    ret
+
+_closeCD:    
+    call isBSY
+
+    mov dx, 0x1f6
+    mov al, 10h
+    out dx, al 
+
+    mov dx, 0x1f7
+    mov al, 0xA0 ;ATAPI COMMAND
+    out dx, al 
+
+    call doNothing
+
+    call isBSY
+    call isDRQ
+
+    mov dx, 0x1f0
+    mov ax, 1Bh
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 3
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    mov ax, 0
+    out dx, ax
+
+    call isBSY
+    ret
+
+
+_infoCD:
+    call isBSY
+
+    mov dx, 0x1f6
+    mov al, 10h
+    out dx, al 
+
+    call doNothing
+
+    mov dx, 0x1f1
+    mov al, 0
+    out dx, al 
+
+    mov dx, 0x1F4
+    mov al, 0x08
+    out dx, al
+
+    mov dx, 0x1F5
+    mov al, 0x08
+    out dx, al
+
+    mov dx, 0x1f7
+    mov al, 0xA0 ;ATAPI COMMAND
+    out dx, al 
+
+    call isBSY
+
+    mov dx, 0x1f0
+
+    mov ax, 0x25
+    out dx, ax
+
+    mov ax, 0x00
+    out dx, ax
+
+    mov ax, 0x00
+    out dx, ax
+
+    mov ax, 0x00
+    out dx, ax
+
+    mov ax, 0x00
+    out dx, ax
+
+    mov ax, 0x00
+    out dx, ax
+
+    call isBSY
+
+    ;call isDRQ    
+
+    mov dx, 1f0h
+
+    mov ebx, 0
+
+    in ax, dx
+    mov [buffer + ebx], ax
+    add ebx, 2
+
+    in ax, dx
+    mov [buffer + ebx], ax
+    add ebx, 2
+
+    in ax, dx
+    mov [buffer + ebx], ax
+    add ebx, 2
+
+    in ax, dx
+    mov [buffer + ebx], ax
+
+    mov eax, [buffer]
+    mov ebx, [buffer + 4]
+    push ebx
+    push eax
+
+    ;call print_info_cd
+    add esp,8
+
+    ret
+SECTION .bss
+
+buffer resb 8
+

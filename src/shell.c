@@ -29,16 +29,27 @@ void test_hello_world()
   printf("Hello, world!");
 }
 
+void test_cd()
+{
+  int i = 0;
+  _openCD();
+  while (i < 5000)
+  {
+    i++;
+  }
+  _closeCD();
+
+}
+
 void openCD()
 {
- // _openCD();
+ _openCD();
 }
 
 void closeCD()
 {
-  // _closeCD();
+  _closeCD();
 }
-
 void infoCD()
 {
   // _infoCD();
@@ -64,10 +75,10 @@ void test_numbers()
 void initialize_commands()
 {
   commands[0].name = "opencd";
-  commands[0].function = &test_hello_world;
+  commands[0].function = &openCD;
 
   commands[1].name = "closecd";
-  commands[1].function = &test_hello_world;
+  commands[1].function = &closeCD;
 
   commands[2].name = "infocd";
   commands[2].function = &infoCD;
@@ -80,6 +91,9 @@ void initialize_commands()
 
   commands[5].name = "test numbers";
   commands[5].function = &test_numbers;
+
+  commands[6].name = "test cd";
+  commands[6].function = &test_cd;
 }
 
 boolean run_command(char * cmd)
