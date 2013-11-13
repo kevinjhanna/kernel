@@ -57,6 +57,7 @@ void infoCD()
 
 void test_numbers()
 {
+  clear();
   int i, j, t;
   for (t = 0; t < 1000; t++)
   {
