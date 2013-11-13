@@ -133,7 +133,7 @@ void shell_run_command(char * buffer, int* pos)
 void run_shell()
 {
 
-  char shell_buffer[10];
+  char shell_buffer[1000];
   int shell_buffer_pos = 0;
   char c;
 
