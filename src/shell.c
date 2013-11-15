@@ -116,6 +116,13 @@ boolean run_command(char * cmd)
   return found_command;
 }
 
+void prompt()
+{
+  printf("arqui@km: ");
+}
+
+
+
 void shell_run_command(char * buffer, int* pos)
 {
 
@@ -128,8 +135,11 @@ void shell_run_command(char * buffer, int* pos)
     }
 
     *pos = 0;
+    prompt();
+
   }
 }
+
 
 void run_shell()
 {
@@ -141,7 +151,8 @@ void run_shell()
   initialize_commands();
   clean_screen_segment(DEBUG);
   clean_screen_segment(SHELL);
-
+  screen_division();
+  prompt();
   while(true)
   {
     c = getChar();

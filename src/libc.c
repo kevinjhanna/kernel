@@ -16,18 +16,11 @@ unsigned char aBuffer[32];
 
 void k_clear_screen()
 {
-	/*char *vidmem = (char *) 0xb8000;
-	unsigned int i=0;
-	while(i < (80*25*2))
-	{
-		vidmem[i]='7';
-		i++;
-		vidmem[i]=WHITE_TXT;
-		i++;
-	};*/
 }
 
-//https://android.googlesource.com/kernel/lk/+/qcom-dima-8x74-fixes/lib/libc/itoa.c
+/*
+ * Source: https://android.googlesource.com/kernel/lk/+/qcom-dima-8x74-fixes/lib/libc/itoa.c
+ */
 int itoa(int sum, unsigned char* str, int base)
 {
 
@@ -53,16 +46,16 @@ int itoa(int sum, unsigned char* str, int base)
       str[i++] = '0' + digit;
     else
       str[i++] = 'A' + digit - 0xA;
-
     sum /= base;
 
   } while (sum);
 
   str[i] = '\0';
+ 
+  /* Position of the last number in the buffer */
+  p2 = str + i - 1;
 
-  p2 = str + i - 1; // Position of the last number in the buffer
-
-  // Now we put in the correct order the given number.
+  /* Now we put in the correct order the given number */
   do
   {
     temp = *p1;
@@ -110,9 +103,10 @@ unsigned int strtoul(unsigned int sum, unsigned char* str, int base)
 
   str[i] = '\0';
 
-  p2 = str + i - 1; // Position of the last number in the buffer
+  /* Position of the last number in the buffer */
+  p2 = str + i - 1; 
 
-  // Now we put in the correct order the given number.
+  /* Now we put in the correct order the given number */
   do
   {
     temp = *p1;
@@ -150,14 +144,23 @@ char getChar()
 }
 
 
+/*
+ * Arguments for fprintf:
+ * 
+ * stream: DEBUG or SHELL
+ * fmt: string
+ * ...: many arguments that are interpreted according to the format rules
+ *		used in the string.
+ *
+ */
 int fprintf(int stream, const char *fmt, ...){
 
-	va_list ap; /* apunta a cada arg sin nombre en orden */
-	va_start(ap,fmt); /*hace que ap apunte al 1er. arg sin nombre*/
+	va_list ap;
+	va_start(ap,fmt);
 
 	vfprintf(stream, &fmt, ap);
 
-	va_end(ap); /*limpia cuando todo esta hecho*/
+	va_end(ap);
 
 	return 0;
 }
@@ -179,7 +182,8 @@ int vfprintf(int stream, char *fmt,va_list ap)
 {
 
 	char *p, *sval;
-	int ival, hval;
+	int ival;
+	int hval;
 	char cval;
 
 		for(p = fmt; *p; p++){
@@ -214,19 +218,28 @@ int vfprintf(int stream, char *fmt,va_list ap)
 	return 0;
 }
 
+/*
+ *	Print on SHELL.
+ *	Var ap point to each argument without name in order
+ *	va_start(ap,fmt) point to the first argument without name
+ *	va_end(ap) clean everything
+ * 
+ */
 void printf(char * fmt, ...)
 {
-
-	va_list ap; /* apunta a cada arg sin nombre en orden */
-	va_start(ap,fmt); /*hace que ap apunte al 1er. arg sin nombre*/
+	va_list ap;
+	va_start(ap,fmt);
 
 	vfprintf(SHELL, fmt, ap);
 
-	va_end(ap); /*limpia cuando todo esta hecho*/
+	va_end(ap); 
 }
 
+/*
+ *	Source: /*http://en.wikibooks.org/wiki/C_Programming/C_Reference/stdio.h/putchar
+ */
 int putchar(int ch)
-{	/*http://en.wikibooks.org/wiki/C_Programming/C_Reference/stdio.h/putchar*/
+{	
 	return putc(ch, SHELL);
 }
 
@@ -242,7 +255,6 @@ int putc(int ch, int fd){
     return ch;
   }
 }
-
 
 int isNumber(char ascii)
 {
@@ -377,10 +389,6 @@ int scanf(const char *fmt, ...)
 		va_end(ap);
 		return i;
 }
-
-
-
-
 
 /***************************************************************
 *setup_IDT_entry

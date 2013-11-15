@@ -119,3 +119,14 @@ void clean_screen_segment(int fd)
     }
   }
 }
+
+void screen_division()
+{
+  int offset = 0;
+  int DEBUG_last_line = 9;
+  while (offset <  80){
+    video_set(DEBUG, offset, DEBUG_last_line, '-');
+    offset++;
+  }
+
+}
