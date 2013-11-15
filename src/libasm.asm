@@ -186,30 +186,6 @@ LOOP2:
     JE LOOP2
     ret
 
-_identify:
-    mov dx, 0x1f6
-    mov al, 00h
-    out dx, al  
-
-    mov dx, 0x1f2
-    mov al, 00h
-    out dx, al
-
-    mov dx, 0x1f3
-    mov al, 00h
-    out dx, al
-
-    mov dx, 0x1f4
-    mov al, 00h
-    out dx, al
-
-    mov dx, 0x1f5
-    mov al, 00h
-    out dx, al
-
-    mov dx, 0x1f7
-    mov al, 0xEC
-    out dx, al
 _openCD:
 
      call isBSY
