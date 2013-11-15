@@ -18,7 +18,7 @@ int tickpos=640;
 /*
  * Indicates wether ctrl key is pressed or not TODO: move to keyboard
  */
-int ctrl_pressed = false;
+//int ctrl_pressed = false;
 
 
 /*
@@ -54,12 +54,16 @@ void key_press(byte scancode)
 {
   if (scancode == 0x1d) // TODO: implement with a switch, check other ctrl values.
   {
-    ctrl_pressed = true;
+  	set_ctrl_pressed(true);
+  }
+  else if(scancode == 0x3a)
+  {
+  	chance_caplock_state();
   }
   else
   {
     char ascii = scancode_to_ascii(scancode);
-    if (ascii == 'r' && ctrl_pressed)
+    if (ascii == 'r' && is_ctrl_pressed())
     {
       // Show register info
       info_register();
@@ -72,9 +76,9 @@ void key_press(byte scancode)
 
 void key_release(byte scancode)
 {
-  if (scancode == 0x9d) // TODO: implement with a switch, check other ctrl values.
-  {
-    ctrl_pressed = false;
+  switch(scancode){
+  	case 0x9d: set_ctrl_pressed(0); break;
+  	//case 0xBA: set_caplock_pressed(0); break;
   }
 }
 
@@ -102,10 +106,6 @@ void keyboard_handler(byte scancode) {
 }
 
 
-/*
-*Sobre las primitivas: http://www.gnu.org/software/libc/manual/html_node/I_002fO-Primitives.html
-*/
-
 void _write_new_line(int fd) {
   video_write_new_line(fd);
 }
@@ -119,7 +119,6 @@ int _write(int fd, const void* buffer, int count){
   return count;
 }
 
-
 /* Returns read count */
 int _read(int fd, void* buffer, int count){
   if (cbIsEmpty(&keyboardBuffer))
@@ -130,6 +129,8 @@ int _read(int fd, void* buffer, int count){
     return 1; // should return how many elements it has read.
   }
 }
+
+
 
 
 /**********************************************

@@ -3,6 +3,11 @@
  */
 
 #include "../include/keyboard_driver.h"
+#include "../include/defs.h"
+
+int ctrl_pressed = false;
+int caplock_pressed = false;
+
 
 /*
  * Map each scancode to an ascii value.
@@ -65,14 +70,32 @@ char asccode[58][2] =
        { ',','<' } ,
        { '.','>' } ,
        { '/','?' } ,
+       {   0,0   } , //RShift
        {   0,0   } ,
        {   0,0   } ,
-       {   0,0   } ,
-       { ' ',' ' } ,
+       { ' ',' ' } , //spacebar
+
    };
 
 
 char scancode_to_ascii(char scancode) {
-  return asccode[scancode][0];
+  char c = asccode[scancode][0];
+
+  if( ('a' <= c && c <= 'z') && caplock_pressed){
+       c = asccode[scancode][1];
+  }
+
+  return c;
 }
 
+int is_ctrl_pressed(){
+     return ctrl_pressed;
+}
+
+void chance_caplock_state(){
+       caplock_pressed = (caplock_pressed == false) ? true: false;
+}
+
+void set_ctrl_pressed(int state){
+       ctrl_pressed = state;
+}
