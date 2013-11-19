@@ -18,8 +18,16 @@ EXTERN  edx_value
 EXTERN  ebp_value
 EXTERN  esp_value
 
-SECTION .text
+EXTERN  cs_value
+EXTERN  ds_value
+EXTERN  ss_value
+EXTERN  es_value
+EXTERN  gs_value
 
+EXTERN  idtr_value
+EXTERN  flags_value
+
+SECTION .text
 
 _Cli:
 	cli			; limpia flag de interrupciones
@@ -50,12 +58,13 @@ _read_msw:
         smsw    ax		; Obtiene la Machine Status Word
         retn
 
-
 _lidt:				; Carga el IDTR
         push    ebp
         mov     ebp, esp
         push    ebx
         mov     ebx, [ss: ebp + 6] ; ds:bx = puntero a IDTR
+        mov [idtr_value], ebx
+
 	rol	ebx,16
 	lidt    [ds: ebx]          ; carga IDTR
         pop     ebx
@@ -135,9 +144,6 @@ _test_zero:
 
 ; ***************************************************************************
 _keyboard_handler:			; INT 9 Handler (Keyboard)
-    push    ds
-    push    es      ; Se salvan los registros
-    pusha           ; Carga de DS y ES con el valor del selector
 
     ; Save registers in case we need to show them later
     mov [eax_value], eax
@@ -147,6 +153,19 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
 
     mov [ebp_value], ebp
     mov [esp_value], esp
+    mov [cs_value], cs
+    mov [ds_value], ds
+    mov [ss_value], ss
+    mov [es_value], es
+    mov [gs_value], gs
+
+    push    ds
+    push    es      ; Se salvan los registros
+    pusha           ; Carga de DS y ES con el valor del selector
+
+    mov eax, [ss: ebp + 4]
+    mov [flags_value], eax
+
 
     ; Read and process scancode
     xor ax, ax      ; Clean ax register
