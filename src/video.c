@@ -101,6 +101,21 @@ void video_write(int fd, char ascii){
   video_move_type_cursor(fd);
 }
 
+/*
+ * Erase previous written position.
+ * Does not support multi lines erasing.
+ */
+void video_erase_write(int fd)
+{
+  ScreenSegment* ss = &screen_segment_table[fd];
+  if (ss->char_offset > 0)
+  {
+    ss->char_offset--;
+    video_set(fd, ss->char_offset, ss->line_offset, ' ');
+    video_move_type_cursor(fd);
+  }
+}
+
 
 /*
  *  Cleans a screen segment and starts offset from 0

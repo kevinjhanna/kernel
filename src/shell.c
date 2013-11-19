@@ -125,18 +125,15 @@ void prompt()
 
 void shell_run_command(char * buffer, int* pos)
 {
-
   if (*pos > 0)
   {
     buffer[*pos] = '\0';
     if (!run_command(buffer))
     {
-      printf("Command not found \n");
+      printf("\nCommand not found \n");
     }
 
     *pos = 0;
-    prompt();
-
   }
 }
 
@@ -146,6 +143,7 @@ void run_shell()
 
   char shell_buffer[1000];
   int shell_buffer_pos = 0;
+  // boolean display_char = true;
   char c;
 
   initialize_commands();
@@ -156,15 +154,20 @@ void run_shell()
   while(true)
   {
     c = getChar();
-    putchar(c);
 
-    if (c == '\n')
+    switch(c)
     {
-      shell_run_command(shell_buffer, &shell_buffer_pos);
-    }
-    else
-    {
-      shell_buffer[shell_buffer_pos++] = c;
+      case '\n':
+        shell_run_command(shell_buffer, &shell_buffer_pos);
+        prompt();
+        break;
+      case '\b':
+        shell_buffer_pos--;
+        video_erase_write(SHELL);
+        break;
+      default:
+        shell_buffer[shell_buffer_pos++] = c;
+        putchar(c);
     }
   }
 }
