@@ -72,6 +72,10 @@ void test_numbers()
   }
 }
 
+void test_zero(){
+  _test_zero();
+}
+
 void initialize_commands()
 {
   commands[0].name = "opencd";
@@ -94,6 +98,9 @@ void initialize_commands()
 
   commands[6].name = "test cd";
   commands[6].function = &test_cd;
+
+  commands[6].name = "test zero";
+  commands[6].function = &test_zero;
 }
 
 boolean run_command(char * cmd)

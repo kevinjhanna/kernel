@@ -41,13 +41,24 @@ int idtr_value, flags_value;
 
 void info_register()
 {
+  //restart_screen_segment_offsets(DEBUG);
+  fprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
+  fprintf(DEBUG, "EBP: %h | ESP: %h \n", ebp_value, esp_value);
+  fprintf(DEBUG, "CS: %h | DS: %h | ", cs_value, ds_value);
+  fprintf(DEBUG, "SS: %h | ES: %h \n", ss_value, es_value);
+  fprintf(DEBUG, "GS: %h \n", gs_value);
+  fprintf(DEBUG, "FLAGS: %h | IDTR %h \n", flags_value, idtr_value);
+}
+
+void info_register2()
+{
   restart_screen_segment_offsets(DEBUG);
-  vfprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
-  vfprintf(DEBUG, "EBP: %h | ESP: %h \n", ebp_value, esp_value);
-  vfprintf(DEBUG, "CS: %h | DS: %h | ", cs_value, ds_value);
-  vfprintf(DEBUG, "SS: %h | ES: %h \n", ss_value, es_value);
-  vfprintf(DEBUG, "GS: %h \n", gs_value);
-  vfprintf(DEBUG, "FLAGS: %h | IDTR %h \n", flags_value, idtr_value);
+  printf("EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
+  printf("EBP: %h | ESP: %h \n", ebp_value, esp_value);
+  printf("CS: %h | DS: %h | ", cs_value, ds_value);
+  printf("SS: %h | ES: %h \n", ss_value, es_value);
+  printf("GS: %h \n", gs_value);
+  printf("FLAGS: %h | IDTR %h \n", flags_value, idtr_value);
 }
 
 void key_press(byte scancode)
