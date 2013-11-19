@@ -2,7 +2,7 @@
 #include "../include/file_descriptors.h"
 #include "../include/shell.h"
 
-#define MAX_COMMANDS 10
+#define MAX_COMMANDS 7
 
 Command commands[MAX_COMMANDS];
 
@@ -78,6 +78,18 @@ void test_numbers()
   }
 }
 
+void help()
+{
+
+  printf("\n");
+  int i;
+  for(i = 0; i < MAX_COMMANDS; i++)
+  {
+    printf("%s \n", commands[i].name);
+  }
+
+}
+
 void initialize_commands()
 {
   commands[0].name = "opencd";
@@ -86,8 +98,8 @@ void initialize_commands()
   commands[1].name = "closecd";
   commands[1].function = &closeCD;
 
-  commands[2].name = "test zero";
-  commands[2].function = &test_zero;
+  commands[2].name = "help";
+  commands[2].function = &help;
 
   commands[3].name = "clear";
   commands[3].function = &clear;
