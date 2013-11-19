@@ -81,21 +81,20 @@ char asccode[58][2] =
 
    };
 
+/*
+ * Transforms given scancode to its ascii value.
+ * Returns its alternative value if shift is pressed.
+ * Returns uppdercase if it is a letter and shift is pressed
+ * or caplock activated.
+ *
+ */`
 
 char scancode_to_ascii(char scancode) {
   char c = asccode[scancode][0];
 
-  if(shift_pressed && caplock_pressed){
-    
-    if(!('a' <= c && c <= 'z'))
-      c = asccode[scancode][1];
-
-  }
-  else if(shift_pressed){
-      c = asccode[scancode][1];
-  }
-  else if( ('a' <= c && c <= 'z') && caplock_pressed){
-       c = asccode[scancode][1];
+  if (shift_pressed || (caplock_pressed && ('a' <= c && c <= 'z')))
+  {
+    c = asccode[scancode][1];
   }
 
   return c;
