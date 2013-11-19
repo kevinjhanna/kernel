@@ -87,7 +87,7 @@ char asccode[58][2] =
  * Returns uppdercase if it is a letter and shift is pressed
  * or caplock activated.
  *
- */`
+ */
 
 char scancode_to_ascii(char scancode) {
   char c = asccode[scancode][0];
