@@ -16,7 +16,7 @@ typedef struct {
     int         size;   /* maximum number of elements           */
     int         start;  /* index of oldest element              */
     int         end;    /* index at which to write new element  */
-    char   *elems[CB_SIZE];  /* vector of elements                   */
+    char   		*elems;  /* vector of elements                   */
 } CircularBuffer;
 
 void cbInit(CircularBuffer *cb);
