@@ -50,10 +50,6 @@ void closeCD()
 {
   _closeCD();
 }
-void infoCD()
-{
-  // _infoCD();
-}
 
 void test_numbers()
 {
@@ -81,8 +77,8 @@ void initialize_commands()
   commands[1].name = "closecd";
   commands[1].function = &closeCD;
 
-  commands[2].name = "infocd";
-  commands[2].function = &infoCD;
+  // commands[2].name = "infocd";
+  // commands[2].function = &infoCD;
 
   commands[3].name = "clear";
   commands[3].function = &clear;
