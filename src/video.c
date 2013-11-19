@@ -64,6 +64,24 @@ void video_set(int fd, int char_offset, int line_offset, char value){
 
 }
 
+/*
+ *  Cleans a screen segment and starts offset from 0
+ */
+void clean_screen_segment(int fd)
+{
+  ScreenSegment ss = screen_segment_table[fd];
+
+  int line;
+  int char_pos;
+  for (line = 0; line < ss.line_offset_limit; line++)
+  {
+    for (char_pos = 0; char_pos < ss.char_offset_limit; char_pos++)
+    {
+      video_set(fd, char_pos, line, ' ');
+    }
+  }
+}
+
 void video_move_type_cursor(int fd)
 {
   ScreenSegment* ss = &screen_segment_table[fd];
@@ -73,9 +91,15 @@ void video_move_type_cursor(int fd)
 
 void _video_new_line(int fd)
 {
-  screen_segment_table[fd].line_offset++;
-  screen_segment_table[fd].char_offset = 0;
-  // TODO Check if we are off limits!!
+  ScreenSegment* ss = &screen_segment_table[fd];
+  ss->line_offset++;
+  ss->char_offset = 0;
+
+  if (ss->line_offset == ss->line_offset_limit)
+  {
+    ss->line_offset = 0;
+    clean_screen_segment(fd);
+  }
 }
 
 void video_write_new_line(int fd)
@@ -117,23 +141,6 @@ void video_erase_write(int fd)
 }
 
 
-/*
- *  Cleans a screen segment and starts offset from 0
- */
-void clean_screen_segment(int fd)
-{
-  ScreenSegment ss = screen_segment_table[fd];
-
-  int line;
-  int char_pos;
-  for (line = 0; line < ss.line_offset_limit; line++)
-  {
-    for (char_pos = 0; char_pos < ss.char_offset_limit; char_pos++)
-    {
-      video_set(fd, char_pos, line, ' ');
-    }
-  }
-}
 
 void screen_division()
 {
