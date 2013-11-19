@@ -137,11 +137,10 @@ void clean_screen_segment(int fd)
 
 void screen_division()
 {
-  int offset = 0;
-  int DEBUG_last_line = 9;
-  while (offset <  80){
-    video_set(DEBUG, offset, DEBUG_last_line, '-');
-    offset++;
+  ScreenSegment screen_segment = screen_segment_table[DEBUG];
+  int offset;
+  for(offset = 0; offset <  screen_segment.char_offset_limit; offset++)
+  {
+    video_set(DEBUG, offset, screen_segment.line_offset_limit - 1, '-');
   }
-
 }

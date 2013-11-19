@@ -142,7 +142,6 @@ void run_shell()
 
   char shell_buffer[1000];
   int shell_buffer_pos = 0;
-  // boolean display_char = true;
   char c;
 
   initialize_commands();
