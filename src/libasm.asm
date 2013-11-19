@@ -149,7 +149,7 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
     mov [eax_value], eax
     mov [ebx_value], ebx
     mov [ecx_value], ecx
-    mov [ecx_value], edx
+    mov [edx_value], edx
 
     mov [ebp_value], ebp
     mov [esp_value], esp
@@ -233,19 +233,19 @@ _openCD:
 
     mov dx, 0x1f6
     mov al, 10h
-    out dx, al 
+    out dx, al
 
     mov dx, 0x1f1
     mov al, 0
-    out dx, al 
+    out dx, al
 
     mov dx, 3f6h
-    mov al, 00001010b ;nIEN is the second bit from the right 
+    mov al, 00001010b ;nIEN is the second bit from the right
     out dx, al; nIEN is now one
 
     mov dx, 0x1f7
     mov al, 0xA0 ;ATAPI COMMAND
-    out dx, al 
+    out dx, al
 
     call doNothing
 
@@ -307,16 +307,16 @@ _openCD:
 
     ret
 
-_closeCD:    
+_closeCD:
     call isBSY
 
     mov dx, 0x1f6
     mov al, 10h
-    out dx, al 
+    out dx, al
 
     mov dx, 0x1f7
     mov al, 0xA0 ;ATAPI COMMAND
-    out dx, al 
+    out dx, al
 
     call doNothing
 
@@ -351,13 +351,13 @@ _infoCD:
 
     mov dx, 0x1f6
     mov al, 10h
-    out dx, al 
+    out dx, al
 
     call doNothing
 
     mov dx, 0x1f1
     mov al, 0
-    out dx, al 
+    out dx, al
 
     mov dx, 0x1F4
     mov al, 0x08
@@ -369,7 +369,7 @@ _infoCD:
 
     mov dx, 0x1f7
     mov al, 0xA0 ;ATAPI COMMAND
-    out dx, al 
+    out dx, al
 
     call isBSY
 
@@ -395,7 +395,7 @@ _infoCD:
 
     call isBSY
 
-    ;call isDRQ    
+    ;call isDRQ
 
     mov dx, 1f0h
 
