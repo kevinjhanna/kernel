@@ -56,10 +56,14 @@ void key_press(byte scancode)
   {
   	set_ctrl_pressed(true);
   }
-  else if(scancode == 0x3a)
+  else if(scancode == 0x3a) /* caplock key */
   {
   	chance_caplock_state();
   }
+  else if(scancode == 0x2a) /* shift key */
+  {
+    set_shift_pressed(true);    
+  } 
   else
   {
     char ascii = scancode_to_ascii(scancode);
@@ -76,8 +80,8 @@ void key_press(byte scancode)
 void key_release(byte scancode)
 {
   switch(scancode){
-  	case 0x9d: set_ctrl_pressed(0); break;
-  	//case 0xBA: set_caplock_pressed(0); break;
+  	case 0x9d: set_ctrl_pressed(false); break;
+  	case 0xaa: set_shift_pressed(false); break;
   }
 }
 

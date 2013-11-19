@@ -10,6 +10,8 @@ int ctrl_pressed = false;
 
 int caplock_pressed = false;
 
+int shift_pressed = false;
+
 
 /*
  * Map each scancode to an ascii value.
@@ -83,7 +85,16 @@ char asccode[58][2] =
 char scancode_to_ascii(char scancode) {
   char c = asccode[scancode][0];
 
-  if( ('a' <= c && c <= 'z') && caplock_pressed){
+  if(shift_pressed && caplock_pressed){
+    
+    if(!('a' <= c && c <= 'z'))
+      c = asccode[scancode][1];
+
+  }
+  else if(shift_pressed){
+      c = asccode[scancode][1];
+  }
+  else if( ('a' <= c && c <= 'z') && caplock_pressed){
        c = asccode[scancode][1];
   }
 
@@ -100,4 +111,8 @@ void chance_caplock_state(){
 
 void set_ctrl_pressed(int state){
   ctrl_pressed = state;
+}
+
+void set_shift_pressed(int state){
+  shift_pressed = state;
 }
