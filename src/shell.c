@@ -6,6 +6,9 @@
 
 Command commands[MAX_COMMANDS];
 
+// Initial text to show with each new line.
+char* prompt_text = { "user@littlekernel: " };
+
 int strcmp (const char * s1, const char * s2)
 {
   for(; *s1 == *s2; ++s1, ++s2)
@@ -114,7 +117,7 @@ boolean run_command(char * cmd)
 
 void prompt()
 {
-  printf("arqui@km: ");
+  printf(prompt_text);
 }
 
 
@@ -158,8 +161,11 @@ void run_shell()
         prompt();
         break;
       case '\b':
-        shell_buffer_pos--;
-        video_erase_write(SHELL);
+        if (shell_buffer_pos > 0)
+        {
+          shell_buffer_pos--;
+          video_erase_write(SHELL);
+        }
         break;
       default:
         shell_buffer[shell_buffer_pos++] = c;
