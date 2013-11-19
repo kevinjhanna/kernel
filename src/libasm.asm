@@ -125,19 +125,19 @@ _test_zero:
     mov [eax_value], eax
     mov [ebx_value], ebx
     mov [ecx_value], ecx
-    mov [ecx_value], edx
+    mov [edx_value], edx
     call info_register
 ;repeat:
 ;    mov [eax_value], eax
 ;    mov [ebx_value], ebx
 ;    mov [ecx_value], ecx
-;    mov [ecx_value], edx
+;    mov [edx_value], edx
 ;    call info_register
+;    add ecx, 1
 ;    add eax, 1
 ;    add ebx, 1
-;    add ecx, 1
 ;    add edx, 1
-;    cmp eax, 0xffffffff
+;    cmp eax, 0x0000ffff
 ;    JNE repeat
     retn
 
