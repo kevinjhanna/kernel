@@ -65,8 +65,7 @@ void key_press(byte scancode)
     char ascii = scancode_to_ascii(scancode);
     if (ascii == 'r' && is_ctrl_pressed())
     {
-      // Show register info
-      info_register();
+      info_register(); // Show register info
     } else {
       // write onto keyboard buffer
       cbWrite(&keyboardBuffer, &ascii);

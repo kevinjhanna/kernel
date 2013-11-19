@@ -5,7 +5,9 @@
 #include "../include/keyboard_driver.h"
 #include "../include/defs.h"
 
+// Indicates wether ctrl key is pressed or not
 int ctrl_pressed = false;
+
 int caplock_pressed = false;
 
 
@@ -89,13 +91,13 @@ char scancode_to_ascii(char scancode) {
 }
 
 int is_ctrl_pressed(){
-     return ctrl_pressed;
+  return ctrl_pressed;
 }
 
 void chance_caplock_state(){
-       caplock_pressed = (caplock_pressed == false) ? true: false;
+  caplock_pressed = (caplock_pressed == false)
 }
 
 void set_ctrl_pressed(int state){
-       ctrl_pressed = state;
+  ctrl_pressed = state;
 }
