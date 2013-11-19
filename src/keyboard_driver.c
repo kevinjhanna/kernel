@@ -95,7 +95,7 @@ int is_ctrl_pressed(){
 }
 
 void chance_caplock_state(){
-  caplock_pressed = (caplock_pressed == false)
+  caplock_pressed = (caplock_pressed == false);
 }
 
 void set_ctrl_pressed(int state){
