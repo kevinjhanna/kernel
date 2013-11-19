@@ -50,17 +50,6 @@ void info_register()
   fprintf(DEBUG, "FLAGS: %h | IDTR %h \n", flags_value, idtr_value);
 }
 
-void info_register2()
-{
-  restart_screen_segment_offsets(DEBUG);
-  printf("EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
-  printf("EBP: %h | ESP: %h \n", ebp_value, esp_value);
-  printf("CS: %h | DS: %h | ", cs_value, ds_value);
-  printf("SS: %h | ES: %h \n", ss_value, es_value);
-  printf("GS: %h \n", gs_value);
-  printf("FLAGS: %h | IDTR %h \n", flags_value, idtr_value);
-}
-
 void key_press(byte scancode)
 {
   if (scancode == 0x1d) // TODO: implement with a switch, check other ctrl values.
