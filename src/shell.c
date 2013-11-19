@@ -124,16 +124,19 @@ void prompt()
 
 void shell_run_command(char * buffer, int* pos)
 {
-  if (*pos > 0)
+  if (*pos == 0)
   {
-    buffer[*pos] = '\0';
-    if (!run_command(buffer))
-    {
-      printf("\nCommand not found \n");
-    }
-
-    *pos = 0;
+    printf("\n");
+    return;
   }
+
+  buffer[*pos] = '\0';
+  if (!run_command(buffer))
+  {
+    printf("\nCommand not found \n");
+  }
+
+  *pos = 0;
 }
 
 
