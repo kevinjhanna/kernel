@@ -41,7 +41,7 @@ int idtr_value, flags_value;
 
 void info_register()
 {
-  //restart_screen_segment_offsets(DEBUG);
+  restart_screen_segment_offsets(DEBUG);
   fprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
   fprintf(DEBUG, "EBP: %h | ESP: %h \n", ebp_value, esp_value);
   fprintf(DEBUG, "CS: %h | DS: %h | ", cs_value, ds_value);
