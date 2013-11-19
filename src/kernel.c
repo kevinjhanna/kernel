@@ -42,12 +42,13 @@ int idtr_value, flags_value;
 void info_register()
 {
   restart_screen_segment_offsets(DEBUG);
-  vfprintf(DEBUG, "EAX: %h | EBX: %h | ECX: %h | EDX: %h \n", eax_value, ebx_value, ecx_value, edx_value);
-  vfprintf(DEBUG, "EBP: %h | ESP: %h \n", ebp_value, esp_value);
-  vfprintf(DEBUG, "CS: %h | DS: %h | ", cs_value, ds_value);
-  vfprintf(DEBUG, "SS: %h | ES: %h \n", ss_value, es_value);
-  vfprintf(DEBUG, "GS: %h \n", gs_value);
-  vfprintf(DEBUG, "FLAGS: %h | IDTR %h \n", flags_value, idtr_value);
+  debug_printf("EAX: %h | EBX: %h | ", eax_value, ebx_value);
+  debug_printf("ECX: %h | EDX: %h \n", ecx_value, edx_value);
+  debug_printf("EBP: %h | ESP: %h \n", ebp_value, esp_value);
+  debug_printf("CS: %h | DS: %h | ", cs_value, ds_value);
+  debug_printf("SS: %h | ES: %h \n", ss_value, es_value);
+  debug_printf("GS: %h \n", gs_value);
+  debug_printf("FLAGS: %h | IDTR %h \n", flags_value, idtr_value);
 }
 
 void key_press(byte scancode)

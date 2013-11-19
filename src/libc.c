@@ -143,29 +143,6 @@ char getChar()
   getc(STDIN);
 }
 
-
-/*
- * Arguments for fprintf:
- * 
- * stream: DEBUG or SHELL
- * fmt: string
- * ...: many arguments that are interpreted according to the format rules
- *		used in the string.
- *
- */
-int fprintf(int stream, const char *fmt, ...){
-
-	va_list ap;
-	va_start(ap,fmt);
-
-	vfprintf(stream, &fmt, ap);
-
-	va_end(ap);
-
-	return 0;
-}
-
-
 /*
  * Basic vfprintf with variable arguments
  * function based on Kernighan's C book, page 172.
@@ -232,14 +209,31 @@ void printf(char * fmt, ...)
 
 	vfprintf(SHELL, fmt, ap);
 
-	va_end(ap); 
+	va_end(ap);
+}
+
+/*
+ *	Print on DEBUG screen.
+ *	Var ap point to each argument without name in order
+ *	va_start(ap,fmt) point to the first argument without name
+ *	va_end(ap) clean everything
+ *
+ */
+void debug_printf(char * fmt, ...)
+{
+	va_list ap;
+	va_start(ap,fmt);
+
+	vfprintf(DEBUG, fmt, ap);
+
+	va_end(ap);
 }
 
 /*
  *	Source: /*http://en.wikibooks.org/wiki/C_Programming/C_Reference/stdio.h/putchar
  */
 int putchar(int ch)
-{	
+{
 	return putc(ch, SHELL);
 }
 
