@@ -2,12 +2,13 @@ GLOBAL  _read_msw,_lidt
 GLOBAL  _int_08_hand
 GLOBAL  _keyboard_handler
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti, set_cursor
-GLOBAL  _debug
+GLOBAL  _debug, _test_zero
 
 GLOBAL _openCD, _closeCD, _infoCD
 
 EXTERN  keyboard_handler
 EXTERN  scancode_to_ascii
+EXTERN  info_register
 
 EXTERN  eax_value
 EXTERN  ebx_value
@@ -107,8 +108,29 @@ set_cursor:
   retn
 
 
-
-
+_test_zero:
+    mov eax, 0
+    mov ebx, 0
+    mov ecx, 0
+    mov edx, 0
+    mov [eax_value], eax
+    mov [ebx_value], ebx
+    mov [ecx_value], ecx
+    mov [ecx_value], edx
+    call info_register
+;repeat:
+;    mov [eax_value], eax
+;    mov [ebx_value], ebx
+;    mov [ecx_value], ecx
+;    mov [ecx_value], edx
+;    call info_register
+;    add eax, 1
+;    add ebx, 1
+;    add ecx, 1
+;    add edx, 1
+;    cmp eax, 0xffffffff
+;    JNE repeat
+    retn
 
 
 ; ***************************************************************************
