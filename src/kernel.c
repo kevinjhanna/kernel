@@ -16,12 +16,6 @@ CircularBuffer keyboardBuffer; // variable global
 int tickpos=640;
 
 /*
- * Indicates wether ctrl key is pressed or not TODO: move to keyboard
- */
-//int ctrl_pressed = false;
-
-
-/*
  * Register values stored with each key press.
  */
 // at least 32 bits.
