@@ -29,7 +29,7 @@ void clear()
 
 void test_hello_world()
 {
-  printf("Hello, world!\n");
+  printf("\nHello, world!\n");
 }
 
 void test_cd()
