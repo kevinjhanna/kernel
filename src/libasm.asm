@@ -150,7 +150,9 @@ _test_zero_loop:
     inc eax
     nop
     nop
-    cmp eax, 0xA000000
+    nop
+    nop
+    cmp eax, 0xFFFFFFFF
     jne _test_zero_loop_repeat
 
   mov esp, ebp

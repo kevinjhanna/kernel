@@ -63,7 +63,7 @@ void test_zero()
 void test_zeroloop()
 {
   printf("\n Long Loop. Put zero in registers.");
-  printf("\n Increment eax each time. Iterate upto eax == 0xA000000");
+  printf("\n Increment eax each time.");
   _test_zero_loop();
   printf("\n Done\n");
 }
