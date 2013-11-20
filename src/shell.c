@@ -29,7 +29,7 @@ void clear()
 
 void test_hello_world()
 {
-  printf("Hello, world!");
+  printf("Hello, world!\n");
 }
 
 void test_cd()
@@ -113,8 +113,8 @@ void initialize_commands()
   commands[6].name = "test cd";
   commands[6].function = &test_cd;
 
-  commands[6].name = "test zero";
-  commands[6].function = &test_zero;
+  commands[7].name = "test zero";
+  commands[7].function = &test_zero;
 }
 
 boolean run_command(char * cmd)
