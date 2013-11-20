@@ -2,7 +2,7 @@
 #include "../include/file_descriptors.h"
 #include "../include/shell.h"
 
-#define MAX_COMMANDS 7
+#define MAX_COMMANDS 8
 
 Command commands[MAX_COMMANDS];
 
