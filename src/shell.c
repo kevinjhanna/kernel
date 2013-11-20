@@ -2,7 +2,7 @@
 #include "../include/file_descriptors.h"
 #include "../include/shell.h"
 
-#define MAX_COMMANDS 8
+#define MAX_COMMANDS 9
 
 Command commands[MAX_COMMANDS];
 
@@ -60,6 +60,14 @@ void test_zero()
   printf("\n");
 }
 
+void test_zeroloop()
+{
+  printf("\n Long Loop. Put zero in registers.");
+  printf("\n Increment eax each time. Iterate upto eax == 0xA000000");
+  _test_zero_loop();
+  printf("\n Done\n");
+}
+
 void test_numbers()
 {
   clear();
@@ -115,6 +123,9 @@ void initialize_commands()
 
   commands[7].name = "test zero";
   commands[7].function = &test_zero;
+
+  commands[8].name = "test zeroloop";
+  commands[8].function = &test_zeroloop;
 }
 
 boolean run_command(char * cmd)

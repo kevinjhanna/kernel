@@ -2,7 +2,7 @@ GLOBAL  _read_msw,_lidt
 GLOBAL  _int_08_hand
 GLOBAL  _keyboard_handler
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti, set_cursor
-GLOBAL  _debug, _test_zero
+GLOBAL  _debug, _test_zero, _test_zero_loop
 
 GLOBAL _openCD, _closeCD
 
@@ -118,7 +118,28 @@ set_cursor:
 
 
 _test_zero:
-    mov eax, 0
+  push    ebp
+  mov     ebp, esp
+
+  mov eax, 0
+  mov ebx, 0
+  mov ecx, 0
+  mov edx, 0
+  mov [eax_value], eax
+  mov [ebx_value], ebx
+  mov [ecx_value], ecx
+  mov [edx_value], edx
+  call info_register
+  mov esp, ebp
+  pop ebp
+
+  retn
+
+_test_zero_loop:
+  push    ebp
+  mov     ebp, esp
+  mov eax, 0
+  _test_zero_loop_repeat:
     mov ebx, 0
     mov ecx, 0
     mov edx, 0
@@ -126,8 +147,16 @@ _test_zero:
     mov [ebx_value], ebx
     mov [ecx_value], ecx
     mov [edx_value], edx
-    call info_register
-    retn
+    inc eax
+    nop
+    nop
+    cmp eax, 0xA000000
+    jne _test_zero_loop_repeat
+
+  mov esp, ebp
+  pop ebp
+
+  retn
 
 
 ; ***************************************************************************
@@ -151,8 +180,11 @@ _keyboard_handler:			; INT 9 Handler (Keyboard)
     push    es      ; Se salvan los registros
     pusha           ; Carga de DS y ES con el valor del selector
 
-    mov eax, [ss: ebp + 4]
-    mov [flags_value], eax
+    pushf ; Pushes the current flags onto the stack
+    pop ax ; Pop the flags from the stack into ax register
+    push ax ; Push them back onto the stack for storage
+    mov [flags_value], ax
+    popf ; Pop the old FLAGS back into place
 
 
     ; Read and process scancode

@@ -20,11 +20,11 @@ int tickpos=640;
  */
 // at least 32 bits.
 unsigned long int eax_value, ebx_value, ecx_value, edx_value;
-unsigned long int ebp_value, esp_value;
+unsigned long int ebp_value, esp_value, idtr_value;
 
 // at least 16 bits.
-unsigned int cs_value, ds_value, ss_value, es_value, fs_value, gs_value;
-int idtr_value, flags_value;
+unsigned short int cs_value, ds_value, ss_value, es_value, fs_value, gs_value;
+unsigned short int flags_value;
 
 
 /*
