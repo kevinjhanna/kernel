@@ -4,7 +4,7 @@ GLOBAL  _keyboard_handler
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti, set_cursor
 GLOBAL  _debug, _test_zero
 
-GLOBAL _openCD, _closeCD, _infoCD
+GLOBAL _openCD, _closeCD
 
 EXTERN  keyboard_handler
 EXTERN  scancode_to_ascii
@@ -127,18 +127,6 @@ _test_zero:
     mov [ecx_value], ecx
     mov [edx_value], edx
     call info_register
-;repeat:
-;    mov [eax_value], eax
-;    mov [ebx_value], ebx
-;    mov [ecx_value], ecx
-;    mov [edx_value], edx
-;    call info_register
-;    add ecx, 1
-;    add eax, 1
-;    add ebx, 1
-;    add edx, 1
-;    cmp eax, 0x0000ffff
-;    JNE repeat
     retn
 
 
@@ -345,86 +333,6 @@ _closeCD:
     call isBSY
     ret
 
-
-_infoCD:
-    call isBSY
-
-    mov dx, 0x1f6
-    mov al, 10h
-    out dx, al
-
-    call doNothing
-
-    mov dx, 0x1f1
-    mov al, 0
-    out dx, al
-
-    mov dx, 0x1F4
-    mov al, 0x08
-    out dx, al
-
-    mov dx, 0x1F5
-    mov al, 0x08
-    out dx, al
-
-    mov dx, 0x1f7
-    mov al, 0xA0 ;ATAPI COMMAND
-    out dx, al
-
-    call isBSY
-
-    mov dx, 0x1f0
-
-    mov ax, 0x25
-    out dx, ax
-
-    mov ax, 0x00
-    out dx, ax
-
-    mov ax, 0x00
-    out dx, ax
-
-    mov ax, 0x00
-    out dx, ax
-
-    mov ax, 0x00
-    out dx, ax
-
-    mov ax, 0x00
-    out dx, ax
-
-    call isBSY
-
-    ;call isDRQ
-
-    mov dx, 1f0h
-
-    mov ebx, 0
-
-    in ax, dx
-    mov [buffer + ebx], ax
-    add ebx, 2
-
-    in ax, dx
-    mov [buffer + ebx], ax
-    add ebx, 2
-
-    in ax, dx
-    mov [buffer + ebx], ax
-    add ebx, 2
-
-    in ax, dx
-    mov [buffer + ebx], ax
-
-    mov eax, [buffer]
-    mov ebx, [buffer + 4]
-    push ebx
-    push eax
-
-    ;call print_info_cd
-    add esp,8
-
-    ret
 SECTION .bss
 
 buffer resb 8
